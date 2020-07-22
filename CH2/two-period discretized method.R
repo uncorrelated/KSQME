@@ -6,9 +6,8 @@
 # 他の手法と共通する設定などを読み込む
 source("common.R")
 
-grid_w <- init_grid(gparam_w) # 所得w計算用
-grid_a <- init_grid(gparam_a) # 貯蓄a計算用
-
+grid_w <- init_grid(gparam_w) # 所得wを表すグリッド
+grid_a <- init_grid(gparam_a) # 貯蓄aを表すグリッド
 
 # 所得wと貯蓄aの組み合わせに応じた消費と生涯効用を計算
 cons_0 <- rep(grid_w, each=gparam_a$number) - rep(grid_a, gparam_w$number) # 0期の消費
@@ -35,7 +34,7 @@ for(w in c(0.5, 0.8, 1.0)){
 	df_fig1_a[ncu==mobjf[, gp_w], cname] <- NA # 消費が負のとき
 }
 
-df_fig1_b <- data.frame(wage=grid_w, policy=optimal_a) # 図1(b)
+df_fig1_b <- data.frame(wage=grid_w, policy_discretized=optimal_a) # 図1(b)
 
 # 図1(a)をプロットする
 pch <- c(21, 24, 22)
@@ -52,7 +51,7 @@ dev.copy2eps(file="fig 1-a.eps", width=6, height=4)
 
 # 図1(b)をプロットする
 par(mar=c(4, 4.5, 2, 1), bg="white")
-plot(policy ~ wage, xlab=expression(paste("Income: ",w)), ylab=expression(paste("Saving: ",a)), data=df_fig1_b, type="o", pch=21, bg='white', ylim=c(0, 0.5))
+plot(policy_discretized ~ wage, xlab=expression(paste("Income: ",w)), ylab=expression(paste("Saving: ",a)), data=df_fig1_b, type="o", pch=21, bg='white', ylim=c(0, 0.5))
 
 # プロットした図をepsで保存する
 dev.copy2eps(file="fig 1-b.eps", width=6, height=4)
