@@ -22,22 +22,6 @@ luf <- function(a, w){
 	utility
 }
 
-# 消費の限界効用
-dCRRA <- function(cons, gamma=dparam[["gamma"]]) cons^(-gamma)
-
-# 0期と1期の消費の限界代替率
-msr <- function(a, w){
-	cons_0 <- w - a # 0期の消費
-	if(cons_0 <= 0){
-		return(-1e+10) # -∞の代わりを返す
-	}
-	with(dparam, {
-		cons_1 <- (1.0 + nir)*a # 1期の消費
-		beta*(1.0 + nir)*dCRRA(cons_1)/dCRRA(cons_0)
-	})
-}
-
-
 # 所得wごとの貯蓄aを求めてデータフレームにまとめる
 df_fig2 <- data.frame(
 	 wage = grid_w,
@@ -57,14 +41,14 @@ df_others <- data.frame(
 	wage = grid_w,
 
 	# 代数的解を求める
-	closed_form =  with(dparam, {
+	policy_closed_form =  with(dparam, {
 		1.0/(1.0+(beta*(1+nir))^(-1/gamma)*(1+nir))*grid_w
 	}),
 	 
 	policy_uniroot = sapply(grid_w, function(w){
 		# 求根法で0期と1期の消費の限界代替率が1になる貯蓄aを探す
 		r_uniroot <- uniroot(function(a){
-			msr(a, w) - 1
+			euler_eq(a, w) - 1
 		}, upper=gparam_a$max, lower=gparam_a$min)
 		# 生涯効用関数を最大化を満たす貯蓄a
 		r_uniroot$root

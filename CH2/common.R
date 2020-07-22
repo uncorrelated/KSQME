@@ -33,3 +33,18 @@ CRRA <- function(cons, gamma=dparam[["gamma"]]){
        }
 }
 
+# 消費の限界効用
+dCRRA <- function(cons, gamma=dparam[["gamma"]]) cons^(-gamma)
+
+# オイラー方程式の変形
+euler_eq <- function(a, w){
+	cons_0 <- w - a # 0期の消費
+	if(any(cons_0 <= 0)){
+		return(-1e+10) # -∞の代わりを返す
+	}
+	with(dparam, {
+		cons_1 <- (1.0 + nir)*a # 1期の消費
+		beta*(1.0 + nir)*dCRRA(cons_1)/dCRRA(cons_0)
+	})
+}
+
