@@ -37,24 +37,6 @@ df_fig2 <- data.frame(
 	 })
 )
 
-df_others <- data.frame(
-	wage = grid_w,
-
-	# 代数的解を求める
-	policy_closed_form =  with(dparam, {
-		1.0/(1.0+(beta*(1+nir))^(-1/gamma)*(1+nir))*grid_w
-	}),
-	 
-	policy_uniroot = sapply(grid_w, function(w){
-		# 求根法で0期と1期の消費の限界代替率が1になる貯蓄aを探す
-		r_uniroot <- uniroot(function(a){
-			euler_eq(a, w) - 1
-		}, upper=gparam_a$max, lower=gparam_a$min)
-		# 生涯効用関数を最大化を満たす貯蓄a
-		r_uniroot$root
-	})
-)
-
 # 図2をプロットする
 par(mar=c(4, 4.5, 2, 1), bg="white")
 plot(policy_nlm ~ wage, xlab=expression(paste("Income: ",w)), ylab=expression(paste("Saving: ",a)), data=df_fig2, type="o", pch=21, bg='white', ylim=c(0, 0.5))
