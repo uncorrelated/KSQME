@@ -45,15 +45,22 @@ ChebyshevBasis <- function(xmin, xmax, d, x){
 }
 
 #
+# Collocation pointsになるcp_xとcp_yの対応から関数の近似のためのパラメーターΘを作成し、xの定義域とセットにしてリストにまとめる
+#
+ChebyshevMapApproximation <- function(cp_x, cp_y, xmin, xmax, d){
+	T <- ChebyshevBasis(xmin, xmax, d, cp_x)
+	theta <- solve(T, cp_y) # = solve(T) %*% cp_y
+	list(theta=theta, xmin=xmin, xmax=xmax, cp_x=cp_x, cp_y=cp_y)
+}
+
+#
 # 関数の近似のためのθを求める
 # args: f:近似する対象の関数, xmin:xの定義域の最小, xmax:xの定義域の最大, d:次数
 #
 ChebyshevApproximation <- function(f, xmin, xmax, d){
 	cp_x <- ChebyshevCollocationPoints(xmin, xmax, d + 1)
 	cp_y <- f(cp_x)
-	T <- ChebyshevBasis(xmin, xmax, d, cp_x)
-	theta <- solve(T) %*% cp_y
-	list(theta=theta, xmin=xmin, xmax=xmax, cp_x=cp_x, cp_y=cp_y)
+	ChebyshevMapApproximation(cp_x, cp_y, xmin, xmax, d)
 }
 
 #
