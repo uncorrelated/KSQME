@@ -24,7 +24,7 @@ for(j in 1:length(ngrid)){
 
 		n <- ngrid[j]
 		gparam_k <- list(number = n, min=0.05, max=0.5) # グリッドのサイズはループごとに変わる
-		grid_k <- init_grid(gparam_k) # 資本ストックを表すグリッド
+		grid_k <- with(gparam_k, { ChebyshevCollocationPoints(min, max, number) }) # 資本ストックを表すグリッド
 
 		# 計算目的である資本ストックに対応した消費を定める政策関数を表すグリッド
 		grid_policy <- grid_k # 初期値は資本ストックに等しくする
