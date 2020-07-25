@@ -91,8 +91,8 @@ for(j in 1:length(ngrid)){
 		})
 
 		# 精度を保存
-		r_benckmark$log10_error.mean[j] <- mean(abs(err))
-		r_benckmark$log10_error.max[j] <- max(abs(err))
+		r_benckmark$log10_error.mean[j] <- log10(mean(abs(err)))
+		r_benckmark$log10_error.max[j] <- log10(max(abs(err)))
 
 	})[3] # system.time()の終わり
 }
