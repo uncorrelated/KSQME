@@ -1,6 +1,6 @@
 #
 # 経済セミナー連載「定量的マクロ経済学と数値計算」
-# 第5回「ニューケインジアン・モデルの新展開」のソースコードのRへの野良移植: 2状態モデル（時間反復法）
+# 第5回「ニューケインジアン・モデルの新展開」のソースコードのRへの野良移植: 2状態モデル（時間反復法）, 図1
 #
 
 # 共通の設定を読み込む
@@ -13,7 +13,7 @@ source("common.R")
 time_iteration_method <- function(p_H){
 	with(dparam, {
 		# 状態の種類を表すグリッド
-		grid_states <- c(s_H, s_L)
+		grid_states <- matrix(c(s_H, s_L), 2, 1)
 		names(grid_states) <- c("H", "L")
 
 		# マルコフ連鎖に使う遷移行列
@@ -29,22 +29,16 @@ time_iteration_method <- function(p_H){
 		msteps <- numeric(maxit) # 更新幅を保存するベクトル
 
 		for(i in 1:maxit){
+			# 古い政策関数から期待値を計算
+			E <- transition %*% policy_old
 
-			for(j in 1:2){
-				# ショックの値？
-				s = grid_states[j];
+			# 期待値を所与として最適化
+			r_s = pmax(r_star + phi*E[,2], 0)
+			y_s = E[,1] - (r_s - E[,2] - grid_states);
+			pi_s = kapper*y_s + beta*E[,2]
 
-				# 古い政策関数から期待値を計算
-				E <- transition[j, ] %*% policy_old
-
-				# 期待値を所与として最適化
-				r_s = max(r_star + phi*E[2], 0)
-				y_s = E[1] - (r_s - E[2] - s);
-				pi_s = kapper*y_s + beta*E[2]
-
-				# 新しい政策関数を保存
-				policy_new[j,] <- c(y_s, pi_s, r_s) 
-			}
+			# 新しい政策関数を保存
+			policy_new[,] <- c(y_s, pi_s, r_s)
 
 			# 繰り返し計算誤差と言うか、policy_newとpolicy_oldの各セルの差の最大値を求める
 			msteps[i] <- max(abs(policy_new - policy_old))
