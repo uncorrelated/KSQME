@@ -5,7 +5,7 @@
 # Replication of Adam and Billi (2007,JME)
 # January 2018, Takeki Sunakawa
 #
-# @uncorrelated translated his Matlab code to R. 
+# ported to R by @uncorrelated
 #
 
 # ディープパラメーター
@@ -47,9 +47,6 @@ u_r <- with(uparam, tauchen(N, 0, rho, sigma, 3.0))
 TM <- g_r$TransitionMatrix %x% u_r$TransitionMatrix
 Grid <- matrix(c(rep(g_r$Grid, each=uparam$N), rep(u_r$Grid, gparam$N)), ncol(TM), 2)
 
-a <- matrix(1:9, 3, 3)
-b <- matrix((-1)^(1:9), 3, 3)
-
 policy <- with(dparam, {
 
 	# 政策関数をあらわすグリッド
@@ -67,14 +64,10 @@ policy <- with(dparam, {
 		# 期待値を所与として最適化
         	pi_s <- (beta*E[,2] + Grid[, 2]) / (1 + kapper^2 / lambda)
 		y_s <- (-kapper / lambda) * pi_s
-# Matlabのコードと雑誌記事の説明が食い違う
-#		r_s <- (1 / sigma)*(E[, 1] - y_s + Grid[, 1]) + E[, 2] # Matlab
-		r_s <- E[, 1] - y_s + E[, 2] + Grid[, 1] # 雑誌記事
+		r_s <- (1 / sigma)*(E[, 1] - y_s + Grid[, 1]) + E[, 2] # 記事ではσ=1が暗に仮定されていた
 
 		f <- 0 > r_s
-# Matlabのコードと雑誌記事の説明が食い違う
-#		y_s[f] <- (E[, 1] - sigma*(0 - E[, 2]) + Grid[, 1])[f] # Matlab
-		y_s[f] <- (E[, 1] + E[, 2] + Grid[, 1])[f] # 雑誌記事
+		y_s[f] <- (E[, 1] - sigma*(0 - E[, 2]) + Grid[, 1])[f] # 記事ではσ=1が暗に仮定されていた
 		pi_s[f] <- (kapper*y_s + beta*E[, 2] + Grid[, 2])[f]
 		r_s[f] <- 0
 
@@ -108,12 +101,12 @@ policy_pi <- matrix(policy[, 2], gparam$N, uparam$N)
 policy_r <- matrix(policy[, 3], gparam$N, uparam$N)
 
 # 雑誌記事の図3に相当する図をプロット
-# replicate Figures 4-5 in the paperとのことだが、雑誌記事と数字があわない
-i <- 16;
+# replicate Figures 4-5 in the paperとのこと
+i <- ceiling(length(g_r$Grid) / 2);
 g <- g_r$Grid/dparam$sigma
 xlab <- "The natural rate of interest"
 par(oma=c(0, 0, 0, 0), mfrow=c(3,1), mar=c(4.5, 4.5, 1, 1), bg="white") 
-plot(g, policy_y[i, ], xlab=xlab, ylab="output gap: y", type="l")
+plot(g, policy_y[i, ] / 4, xlab=xlab, ylab="output gap: y", type="l") # 四半期データにするための /4 なので、本文の文脈では無くてよい
 plot(g, policy_pi[i, ], xlab=xlab, ylab=expression(paste("inflation rate: " , pi)), type="l")
 plot(g, policy_r[i, ], xlab=xlab, ylab=expression(paste("policy interest rate: " , r[n])), type="l")
 
