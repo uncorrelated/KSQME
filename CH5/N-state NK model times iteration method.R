@@ -35,7 +35,7 @@ uparam <- list(
 	N = 31
 )
 
-# グリッド生成
+# {状態/ショック}グリッド生成関数を読み込む
 source("tauchen.R")
 
 # 需要者{の状態/へのショック}を代理できるグリッドを作成
@@ -66,7 +66,8 @@ policy <- with(dparam, {
 		y_s <- (-kapper / lambda) * pi_s
 		r_s <- (1 / sigma)*(E[, 1] - y_s + Grid[, 1]) + E[, 2] # 記事ではσ=1が暗に仮定されていた
 
-		f <- 0 > r_s
+		# マイナス金利のときは、ゼロ金利として再計算
+		f <- 0 > r_s # fには条件文（と言うか論理式）の結果になるTRUE/FALSEのベクトルが入る
 		y_s[f] <- (E[, 1] - sigma*(0 - E[, 2]) + Grid[, 1])[f] # 記事ではσ=1が暗に仮定されていた
 		pi_s[f] <- (kapper*y_s + beta*E[, 2] + Grid[, 2])[f]
 		r_s[f] <- 0
