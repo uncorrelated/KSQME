@@ -7,6 +7,11 @@ if(!any(ls()=="dparam")){
 	source("common.R")
 }
 
+# nleqslvパッケージがインストールされていない場合、先にインストールするように促して止まる
+if(!any(suppressWarnings(library(quietly=TRUE, verbose=FALSE)$results[,"Package"] == "nleqslv"))){
+	stop("Do install.package(\"nleqslv\") before runnning this script.")
+}
+
 # ニュートン・ラフソン法で条件にあうパラメーターを探す
 library(nleqslv)
 objf <- function(p){
