@@ -338,11 +338,12 @@ r_solve <- with(dparam, {
 		print(sprintf("%d %f %f", i, max(abs(policy_1[,1:4] - policy_0[,1:4])), max(abs(policy_1[,5:8] - policy_0[,5:8]))))
 
 		# update the policy functions
+		# なぜか新旧の政策関数のウェイト付き平均をとって、政策関数を更新
 		m.damp <- 0.7
 		policy_0 <- m.damp*policy_0 + (1 - m.damp)*policy_1
 		fvec0 <- m.damp*fvec0 + (1 - m.damp)*fvec1
 
-		# 更新幅がtol未満であれば終了
+		# 新旧の政策関数の差がtol未満であれば終了
 		if(tol > msteps[i]){
 			break;
 		}
