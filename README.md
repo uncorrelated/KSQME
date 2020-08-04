@@ -1,10 +1,10 @@
-[経済セミナー連載の「定量的マクロ経済学と数値計算」のサポート・リポジトリー](https://github.com/keizai-seminar-quant-macro)にR用のコードが部分的にしか用意されていなかったので，ちょっと書いてみたものです。
+[経済セミナー連載の「定量的マクロ経済学と数値計算」のサポート・リポジトリー](https://github.com/keizai-seminar-quant-macro)にR用のコードが部分的にしか用意されていなかったので、ちょっと書いてみたものです。
 
-実行方法はgit cloneなどをしてファイルを展開した後に、Rに読み込ませるだけです。例えば、第3節の離散化による2期間モデルの解法は、[two-period discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20discretized%20method.R)を以下のように実行すると計算します。
+実行方法は`git clone`などをしてファイルを展開した後に、Rに読み込ませるだけです。例えば、第3節の離散化による2期間モデルの解法は、[two-period discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20discretized%20method.R)を以下のように読み込ませて計算します。
 
 	source("two-period discretized method.R")
 
-`getwd()`で確認できるワーキングディレクトリに`two-period discretized method.R`が無いと呼び出せないので注意してください。また、他のファイルやパッケージに依存しているファイルもあります。ファイルはすべて展開し、ソースコード中のコメントやエラーメッセージに応じてパッケージをインストールしてください。
+`getwd()`で確認できるワーキングディレクトリに[two-period discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20discretized%20method.R)が無いと呼び出せないので注意してください。また、他のファイルやパッケージに依存しているファイルもあります。ファイルはすべて展開し、ソースコード中のコメントやエラーメッセージに応じてパッケージをインストールしてください。
 
 
 #### 第2回 2期間モデルと数値計算の概観
