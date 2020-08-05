@@ -275,7 +275,7 @@ r_solve <- with(dparam, {
 				c1n <- calcC(fc1n)
 				pi1n <- calcPi(c1n, fp1n)
 				y1n <- calcY(c1n, pi1n, gp[iv])
-				R1n <- calcR(y1n, pi1n, R0n[iv], rnow[iv], y_star[iv])
+				R1n <- calcR(y1n, pi1n, R0n[iv], rp[iv], y_star[iv])
 
 				fcxn <- calc_fcx(c1n, pi1n, R0n[iv], zp[iv]) # NOTE: max operator is needed?
 				fpxn <- calc_fpx(y0n[iv], y1n, c1n, pi1n)
