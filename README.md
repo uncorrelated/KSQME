@@ -22,4 +22,5 @@
 - [CH5/two-state NK model closed-form.R](https://github.com/uncorrelated/KSQME/blob/master/CH5/two-state%20NK%20model%20closed-form.R) 第2節 2状態モデル
 - [CH5/N-state NK model times iteration method.R](https://github.com/uncorrelated/KSQME/blob/master/CH5/N-state%20NK%20model%20times%20iteration%20method.R) 第3節 N状態モデル
 - [CH5/compare a non-linear NK model to linear one.R](https://github.com/uncorrelated/KSQME/blob/master/CH5/compare%20a%20non-linear%20NK%20model%20to%20linear%20one.R) 第4節 非線形モデル
+- [CH5/compare a quasi-linear NK model to linear one.R](https://github.com/uncorrelated/KSQME/blob/master/CH5/compare%20a%20quasi-linear%20NK%20model%20to%20linear%20one.R) 第4節 非線形モデル（の中で言及された準線形モデル; Juliaのコードとプロット結果が微妙に異なるので要精査）
 
