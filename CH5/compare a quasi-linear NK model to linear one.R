@@ -6,6 +6,7 @@
 # 準線形モデルを解く
 source("quasi-linear NK model index-function approach.R")
 
+# 横軸になる前期金利; 準線形モデル、線形モデルの両方の計算に利用
 n <- 101
 Rpast <- with(bound,seq(Rmin, Rmax, length.out=n))
 
@@ -86,7 +87,7 @@ linear <- with(bound, {
 
 
 # プロットする
-par(oma=c(0, 0, 0, 0), mfrow=c(3,1), mar=c(4.5, 4.5, 1, 1), bg="white") 
+par(oma=c(0, 0, 0, 0), mfrow=c(3,1), mar=c(4.5, 4.5, 1, 1), bg="white")  # mfrow=c(3,1)は、3つのプロットを横3分割して表示するためのオプション
 
 drawPlot <- function(ylab, y1, y2, lpos){
 	col <- c("red", "blue")

@@ -11,11 +11,13 @@ source("linear NK model to compare.R")
 
 attach(dparam)
 
-#
-# 推定パラメーターからそれぞれの予測値(から定常状態の値で割って対数化して100倍した値)を計算
-#
+# 横軸になる前期金利; 線形モデル、非線形モデルの両方の計算に利用
 n <- 101
 Rpast <- with(bound,seq(Rmin, Rmax, length.out=n))
+
+#
+# 線形モデル、非線形モデルともに、推定パラメーターからそれぞれの予測値(から定常状態の値で割って対数化して100倍した値)を計算
+#
 
 linear <- with(bound, {
 	c <- rep(NA, n)
@@ -91,7 +93,7 @@ non_linear <- with(bound, {
 detach(dparam)
 
 # プロットする
-par(oma=c(0, 0, 0, 0), mfrow=c(3,1), mar=c(4.5, 4.5, 1, 1), bg="white") 
+par(oma=c(0, 0, 0, 0), mfrow=c(3,1), mar=c(4.5, 4.5, 1, 1), bg="white") # mfrow=c(3,1)は、3つのプロットを横3分割して表示するためのオプション
 
 drawPlot <- function(ylab, y1, y2, lpos){
 	col <- c("red", "blue")
