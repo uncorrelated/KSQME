@@ -93,29 +93,23 @@ detach(dparam)
 # プロットする
 par(oma=c(0, 0, 0, 0), mfrow=c(3,1), mar=c(4.5, 4.5, 1, 1), bg="white") 
 
-col <- c("red", "blue")
-lwd <- c(2, 2)
-lty <- c(1, 2)
-labels <- c("non-linear NK model", "linear NK model")
-x <- log(Rpast/ss$R)*100
+drawPlot <- function(ylab, y1, y2, lpos){
+	col <- c("red", "blue")
+	lwd <- c(2, 2)
+	lty <- c(1, 2)
+	labels <- c("non-linear NK model", "linear NK model")
+	x <- log(Rpast/ss$R)*100
+	ylim <- c(floor(min(y1, y2)), ceiling(max(y1, y2)))
+	plot(x, y1, xlab="", ylab=ylab, type="l", ylim=ylim, col=col[1], lty=lty[1], lwd=lwd[1])
+	lines(x, y2, col=col[2], lty=lty[2], lwd=lwd[2])
+	legend(lpos, lty=lty, lwd=lwd, col=col, legend=labels, bty="n", y.intersp=1.5, seg.len=3, inset=0.05)
+}
 
-ylim <- c(floor(min(non_linear$R, linear$R)), ceiling(max(non_linear$R, linear$R)))
-plot(x, non_linear$R, xlab="", ylab="Policy Rate", type="l", ylim=ylim, col=col[1], lty=lty[1], lwd=lwd[1])
-lines(x, linear$R, col=col[2], lty=lty[2], lwd=lwd[2])
-legend("bottomright", lty=lty, lwd=lwd, col=col, legend=labels, bty="n", y.intersp=1.5, seg.len=3)
-
-ylim <- c(floor(min(non_linear$pi, linear$pi)), ceiling(max(non_linear$pi, linear$pi)))
-plot(x, non_linear$pi, xlab="", ylab="Inflation", type="l", ylim=ylim, col=col[1], lty=lty[1], lwd=lwd[1])
-lines(x, linear$pi, col=col[2], lty=lty[2], lwd=lwd[2])
-legend("topright", lty=lty, lwd=lwd, col=col, legend=labels, bty="n", y.intersp=1.5, seg.len=3)
-
-ylim <- c(floor(min(non_linear$y, linear$y)), ceiling(max(non_linear$y, linear$y)))
-plot(x, non_linear$y, xlab="", ylab="Output Gap", type="l", ylim=ylim, col=col[1], lty=lty[1], lwd=lwd[1])
-lines(x, linear$y, col=col[2], lty=lty[2], lwd=lwd[2])
-legend("topright", lty=lty, lwd=lwd, col=col, legend=labels, bty="n", y.intersp=1.5, seg.len=3)
+drawPlot("Policy Rate", non_linear$R, linear$R, "bottomright")
+drawPlot("Inflation", non_linear$pi, linear$pi, "topright")
+drawPlot("Output Gap", non_linear$y, linear$y, "topright")
 
 # 図を保存する
-dev.copy2eps(file="fig X-comparing.eps", width=6, height=8)
-# dev.copy(png, "fig-comparing.png", width=400, height=800, type="cairo", bg="white")
-
+dev.copy2eps(file="fig X1-comparing.eps", width=6, height=9)
+# dev.copy(png, "fig X1-comparing.png", width=600, height=900, type="cairo", bg="white"); dev.off()
 
