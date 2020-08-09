@@ -20,14 +20,6 @@ vfi <- function(r, alpha, beta, delta, mu, b, s, prob){
 	minK = -phi;                    # borrowing constraint
 	gridk= seq(minK, maxK, length.out=Nk)      # state of assets 
 
-	if(FALSE){
-		print("girdk:")
-		print(gridk)
-		print("wage:")
-		print(wage)
-	}
-
-
 	#  initialize some variables
 	kfunG  = matrix(0, Nl, Nk);
 	v      = matrix(0, Nl, Nk); 
@@ -52,16 +44,7 @@ vfi <- function(r, alpha, beta, delta, mu, b, s, prob){
 				kccmax <- Nk # Matlabコードでは初期化されておらず、ループ中の前の処理結果の値が入る可能性がある
 				for(kcc in 1:Nk){
 					cons = s[lc]*wage + (1+r)*gridk[kc] - gridk[kcc];
-					if(FALSE && j<10){
-						j <- j + 1
-						print(sprintf("s[lc]: %f wage:%f r:%f gridk[kc]:%f gridk[kcc]:%f\n", s[lc], wage, r, gridk[kc], gridk[kcc]))
-						print(sprintf("kc:%d lc:%d kcc:%d cons: %f\n", kc,lc, kcc, cons))
-					}
 					if(cons<=0){
-						if(FALSE && j<200){
-							print(sprintf("j:%d cons: %f lc: %d kcc: %d", j, cons, lc-1, kcc-1))
-							j = j + 1;
-						}
 						kccmax=kcc-1;
 						break
 					}
@@ -71,38 +54,11 @@ vfi <- function(r, alpha, beta, delta, mu, b, s, prob){
 						vpr = vpr + prob[lc,lcc]*v[lcc,kcc]; 
 					}                
 					vtemp[kcc] = util + beta*vpr;                
-					if(FALSE && j<10){
-						print(sprintf("j: %d, vtemp[%d]: %.3f", j, kcc, vtemp[kcc]))
-						j <- j + 1
-					}
-				}
-
-				if(FALSE && j<100){
-					print(sprintf("j: %d vtemp:\n", j))
-					print(paste(round(vtemp, 6), collapse=", "))
-					j <- j + 1
-				}
-
-				if(FALSE && j<100){
-					print(sprintf("j: %d kccmax: %d", j, kccmax))
-					j = j+1
-				}
-
-				if(FALSE && j<30){
-					print(sprintf("j:%d vtemp:", j))
-					print(paste(round(vtemp, 6), collapse=", "))
-					j <- j + 1
 				}
 
 				t2 <- which.max(vtemp[1:kccmax])
 				t1 <- vtemp[t2]
-				if(FALSE && j<=10){
-					print(sprintf("j %d t1: %.3f t2 %d", j, t1, t2 - 1))
-					print(sprintf("j: %d kccmax: %d", j, kccmax - 1))
-					print(sprintf("j:%d vtemp:", j))
-					print(paste(round(vtemp, 6), collapse=", "))
-					j <- j + 1
-				}
+
 				tv[lc, kc] = t1;
 				kfunG[lc,kc] = t2;
 				kfun[lc,kc] = gridk[t2];            
@@ -111,28 +67,7 @@ vfi <- function(r, alpha, beta, delta, mu, b, s, prob){
 	    
 		v=tv;       
 
-		if(FALSE && j<100){
-			print(sprintf("j: %d\n", j))
-			print(paste(round(v, 6), collapse=", "))
-			j <- j + 1
-		}
-
-		if(FALSE && j<300){
-#			print(sprintf("j: %d kfunG:\n", j))
-			print(paste(round(kfunG - 1, 6), collapse=" "))
-
-			print(sprintf("j: %d kfunG_old:\n", j))
-			print(paste(round(kfunG_old - 1, 6), collapse=" "))
-
-			print(sprintf("j: %d diff:\n", j))
-			print(paste(round(kfunG - kfunG_old, 6), collapse=" "))
-
-			j <- j + 1
-		}
-
-
 		err=max(abs(kfunG-kfunG_old));
-#		print(sprintf("err: %d", err))
 
 		kfunG_old=kfunG;
 		if(err <=0){
@@ -140,15 +75,10 @@ vfi <- function(r, alpha, beta, delta, mu, b, s, prob){
 		}
 	}
 
-#	print(sprintf("iter: %d", iter))
-
-
 	mea0 <- matrix(1, Nl, Nk) / (Nl*Nk);
 	mea1 <- matrix(0, Nl, Nk);
 	errTol = 0.00001;
 	maxiter = 2000;
-
-#	print(c(kfunG));
 
 	for(iter in 1:maxiter){
 		if(FALSE && j<3){
@@ -181,8 +111,6 @@ vfi <- function(r, alpha, beta, delta, mu, b, s, prob){
 			break
 		}
 	}
-
-#	print(sprintf("iter: %d\n", iter))
 
 	list(a=sum(mea0*kfun), gridk=gridk, kfun=kfun)
 }
