@@ -28,10 +28,11 @@
 - [CH6/aiyagari (1994) compute eq K and r.R](https://github.com/uncorrelated/KSQME/blob/master/CH6/aiyagari%20(1994)%20compute%20eq%20K%20and%20r.R) 第2節 ビューリーモデル（図3のプロット）
 - [CH6/aiyagari (1994) plot capital demand and asset supply curves.R](https://github.com/uncorrelated/KSQME/blob/master/CH6/aiyagari%20(1994)%20plot%20capital%20demand%20and%20asset%20supply%20curves.R) 第2節 ビューリーモデル（図4のプロット）
 
-第6回の処理はこれまでと比較してかなり重たい上に、Dynamic Programmingであるためか、元のMatlabのソースコードがベクトルや行列演算の形に直すのは困難に思えるものだったので、RからCで書かれた関数の拡張を呼び出すことにより、処理の高速化が行えるオプションを用意しました。LinuxやMacOSでは、以下のようにCのソースコードをコンパイルした後に、Rのソースコード中で指定するオプションを変更することで、数十倍の高速化が図れます。
+第6回の処理はこれまでと比較してかなり重たい上に、Dynamic Programmingであるためか、元のMatlabのソースコードがベクトルや行列演算の形に直すのは困難に思えるものだったので、RからCで書かれた関数の拡張を呼び出すことにより、処理の高速化が行えるオプションを用意しました。LinuxやMacOSでは、以下のようにCのソースコードをコンパイルした後に、Rのソースコード中で指定するオプション`r_c_mp_switch`を変更することで、数十倍の高速化が図れます。
 
 	R CMD SHLIB aiyagari_vfi1.c
 	R CMD SHLIB aiyagari_vfi2.c
 
 Windowsでも同様にdllを作れ実行できるはずですが、まだ試していません。
-さらに、図4のプロットでは、これもオプションとして、マルチコア対応となっています。Cの拡張とマルチコアを利用することで、純粋なRのコードと比較して70倍から140倍の処理時間の短縮が可能になると思います。
+
+図4のプロットでは、これもオプションとして、さらにマルチコア対応となっています。Cの拡張とマルチコアを利用することで、純粋なRのコードと比較してかなりの処理時間の短縮が可能になります。手元の古めの計算機では70〜140倍といった差異になりました。

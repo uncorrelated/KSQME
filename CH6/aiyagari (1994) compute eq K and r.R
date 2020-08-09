@@ -15,7 +15,7 @@ source("common.R")
 
 # 価値関数のタイプ（高精度/低精度）を定める
 # (1) VALUE FUNCTION (USE THE SAME GRID FOR STATE AND CONTROL)
-vfi_type <- "aiyagari_vfi2"
+vfi_type <- "aiyagari_vfi1"
 
 # (2) VALUE FUNCTION (USE FINER GRID FOR CONTROL)
 # vfi_type <- "aiyagari_vfi2" # 時間がかかるが精度がアップ
@@ -31,7 +31,7 @@ indE = 5;
 
 # 演算ルーチンを指定する（3を指定しても連続実行はしない）
 # 1:R, 2:C
-r_c_mp_switch <- 2
+r_c_mp_switch <- 1
 
 # 価値関数を読み込む
 if(chkflag(r_c_mp_switch,1)){

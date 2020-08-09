@@ -32,7 +32,7 @@ R = seq(minR, maxR, length.out=NR)
 
 # 価値関数のタイプ（高精度/低精度）を定める
 # (1) VALUE FUNCTION (USE THE SAME GRID FOR STATE AND CONTROL)
-vfi_type <- "aiyagari_vfi2"
+vfi_type <- "aiyagari_vfi1"
 
 # (2) VALUE FUNCTION (USE FINER GRID FOR CONTROL)
 # vfi_type <- "aiyagari_vfi2" # 時間がかかるが精度がアップ
@@ -40,7 +40,7 @@ vfi_type <- "aiyagari_vfi2"
 # 演算ルーチンを指定する
 # 1:R, 2:C, 4:R/MP, 8:C/MP
 # 足し算で連続実行でき、ベンチマークを行える。例えば3を指定するとRとCのルーチンでそれぞれ計算（結果は同じ）
-r_c_mp_switch <- 8
+r_c_mp_switch <- 1
 
 if(chkflag(r_c_mp_switch,1)){
 	print("R Code:")
@@ -172,6 +172,7 @@ r_aiyagari <- data.frame(R = R, high = r_high, baseline = r_baseline, low = r_lo
 
 # タブ区切りのファイルに保存（グラフを描き直すときに読み込めば、上の時間のかかる計算を省略できる） 
 write.table(r_aiyagari, "r_aiyagari.txt", row.names=FALSE, quote=FALSE, sep="\t")
+# r_aiyagari <- read.table("r_aiyagari.txt", header=TRUE, sep="\t")
 
 #==========================================================================
 # COMPUTE K
@@ -188,7 +189,7 @@ with(r_aiyagari, {
 	lty <- c(3, 2, 4, 1)
 	lwd <- c(2, 2, 2, 2)
 
-	plot(baseline, R, type="l", main="Aiyagari (1994)", xlab=expression(paste(E, group("[", a, "]")," and ", "K")), ylab="Interest rate", xlim=c(0, 10), lty=lty[1], col=col[1], lwd=lwd[1])
+	plot(baseline, R, type="l", main="Capital Market Equilibrium", xlab=expression(paste(E, group("[", a, "]")," and ", "K")), ylab="Interest rate", xlim=c(0, 10), lty=lty[1], col=col[1], lwd=lwd[1])
 	lines(high, R, lty=lty[2], col=col[2], lwd=lwd[2])
 	lines(low, R, lty=lty[3], col=col[3], lwd=lwd[3])
 	lines(K, R_K, lty=lty[4], col=col[4], lwd=lwd[4])
