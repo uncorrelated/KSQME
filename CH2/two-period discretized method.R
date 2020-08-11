@@ -49,6 +49,9 @@ legend("topright", colnames(df_fig1_a)[2:4], col=col, lty=lty, lwd=1, pch=pch, p
 # プロットした図をepsで保存する
 dev.copy2eps(file="fig 1-a.eps", width=6, height=4)
 
+# ENTERが入力されるまで処理を止める
+invisible(readline(prompt="Press [enter] to continue."))
+
 # 図1(b)をプロットする
 par(mar=c(4, 4.5, 2, 1), bg="white")
 plot(policy_discretized ~ wage, xlab=expression(paste("Income: ",w)), ylab=expression(paste("Saving: ",a)), data=df_fig1_b, type="o", pch=21, bg='white', ylim=c(0, 0.5))
