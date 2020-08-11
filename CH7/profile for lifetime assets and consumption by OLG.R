@@ -24,14 +24,17 @@ param_baseline <- list(
 )
 param_baseline$meaJ <- rep(1/param_baseline$Nj, param_baseline$Nj) # AGE DISTRIBUTION (no population growth) 
 
+# 計算する
 r_baseline <- calcOLG(param_baseline)
 
+# プロットする
+
+# 資産aと消費cの計算期間が異なることに注意
 ageA <- (1:(param_baseline$Nj + 1)) + 19
 ageC <- (1:(param_baseline$Nj)) + 19
 
 norm <- r_baseline$c[1]
 
-# プロットする
 xlim <- c(min(ageA), max(ageA))
 par(oma=c(0, 0, 0, 0), mfrow=c(1,2), mar=c(4.5, 3, 2, 1), bg="white") # mfrow=c(1,2)は、2つのプロットを縦2分割して表示するためのオプション
 

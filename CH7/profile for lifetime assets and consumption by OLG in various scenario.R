@@ -24,15 +24,15 @@ param_baseline <- list(
 )
 param_baseline$meaJ <- rep(1/param_baseline$Nj, param_baseline$Nj) # AGE DISTRIBUTION (no population growth) 
 
-# Scenario 1
+# Scenario 1 のパラメーター
 param_scenario_1 <- param_baseline
 param_scenario_1$rho <- 0.25
 
-# Scenario 2
+# Scenario 2 のパラメーター
 param_scenario_2 <- param_baseline
 param_scenario_2$NjW <- 50
 
-# Scenario 3
+# Scenario 3 のパラメーター
 param_scenario_3 <- param_baseline
 param_scenario_3$Nj <- 66
 param_scenario_3$meaJ <- rep(1/66, param_scenario_3$Nj)
@@ -43,13 +43,14 @@ r_scenario_1 <- calcOLG(param_scenario_1)
 r_scenario_2 <- calcOLG(param_scenario_2)
 r_scenario_3 <- calcOLG(param_scenario_3)
 
+# プロットする
+
 # 資産aと消費cの計算期間が異なることに注意
 ageA <- (1:(param_baseline$Nj + 1)) + 19
 ageC <- (1:(param_baseline$Nj)) + 19
 
 norm <- r_baseline$c[1]
 
-# プロットする
 xlim <- c(min(ageA), max(ageA))
 lty <- c(1, 4, 3, 2)
 lwd <- c(2, 2, 2, 2)
