@@ -9,7 +9,7 @@ if(!any(ls()=="dparam")){
 
 # nleqslvパッケージがインストールされていない場合、先にインストールするように促して止まる
 if(!any(suppressWarnings(library(quietly=TRUE, verbose=FALSE)$results[,"Package"] == "nleqslv"))){
-	stop("Do install.package(\"nleqslv\") before runnning this script.")
+	stop("Do install.packages(\"nleqslv\") before runnning this script.")
 }
 
 # ニュートン・ラフソン法で条件にあうパラメーターを探す

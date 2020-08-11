@@ -143,7 +143,7 @@ detach(dparam)
 
 # 依存しているパッケージのインストールチェック
 if(!any(suppressWarnings(library(quietly=TRUE, verbose=FALSE)$results[,"Package"] == "QZ"))){
-	stop("Do install.package(\"QZ\") before runnning this script.")
+	stop("Do install.packages(\"QZ\") before runnning this script.")
 }
 library(QZ)
 

@@ -88,7 +88,7 @@ chkflag <- function(n, fpos){
 chkPkg <- function(pkgnames){
 	for(pkgname in pkgnames){
 		if(!any(suppressWarnings(library(quietly=TRUE, verbose=FALSE)$results[,"Package"] == pkgname))){
-			stop(paste("Do install.package(\"", pkgname, "\") before runnning this script.", sep=""))
+			stop(paste("Do install.packages(\"", pkgname, "\") before runnning this script.", sep=""))
 		}
 	}
 }
