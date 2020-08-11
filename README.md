@@ -36,3 +36,8 @@
 Windowsでも同様にdllを作れ実行できるはずですが、まだ試していません。
 
 図4のプロットでは、これもオプションとして、さらにマルチコア対応となっています。Cの拡張とマルチコアを利用することで、純粋なRのコードと比較してかなりの処理時間の短縮が可能になります。手元の古めの計算機では70〜140倍といった差異になりました。
+
+#### 第7回 世代重複マクロモデル
+- [CH7/profile for lifetime assets and consumption by OLG.R](https://github.com/uncorrelated/KSQME/blob/master/CH7/profile%20for%20lifetime%20assets%20and%20consumption%20by%20OLG.R) 第2節 世代重複モデル（図3のプロット）
+- [CH7/profile for lifetime assets and consumption by OLG in various scenario.R](https://github.com/uncorrelated/KSQME/blob/master/CH7/profile%20for%20lifetime%20assets%20and%20consumption%20by%20OLG%20in%20various%20scenario.R) 第2節 世代重複モデル（図4のプロット）
+
