@@ -27,3 +27,6 @@ df_others <- data.frame(
 	})
 )
 
+# ソースを読み込んでも無反応なので、結果を表示するようにする
+print(df_others)
+
