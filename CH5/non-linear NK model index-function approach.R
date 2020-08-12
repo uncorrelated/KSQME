@@ -139,7 +139,7 @@ r_solve <- with(dparam, {
 
 	xgrid <- makegrid()
 	bbt <- poly2s(xgrid) # 何の略語なのかなど不明
-	# bbtinv <- solve(bbt)
+	bbtinv <- solve(bbt)
 
 	# gh nodes and weights
 	m.ngh <- 3 # 変数ごとのグリッドポイントの数
@@ -241,8 +241,7 @@ r_solve <- with(dparam, {
 
 		# fitting polynomials
 		# fvec0 = bbt %*% coefになる模様
-		# coef <- bbtinv %*% fvec0
-		coef <- solve(bbt, fvec0) # 逆行列をかけるより、連立方程式を解いた方が速いと怒られるので
+		coef <- bbtinv %*% fvec0
 
 		# g,z,Rへのショックをまとめて計算しておく
 		shocks <- t(ghnodes) * c(sigma_g, sigma_z, sigma_R)
