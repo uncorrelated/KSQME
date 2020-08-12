@@ -25,25 +25,19 @@ linear <- with(bound, {
 	pi <- numeric(n)
 	R <- numeric(n) # Juliaのコードではrnに対応
 
-	for(i in 1:n){
-		gnow <- 0
-		znow <- zmin
-		rnow <- 0
+	gnow <- 0
+	znow <- zmin
+	rnow <- 0
 
-		X0 = numeric(8)
-		X0[3] = log(Rpast[i]/ss$R)
-		X0[5] = gnow
-		X0[6] = znow    
+	X0 <- matrix(0, 8, n)
+	X0[3, ] = log(Rpast/ss$R)
+	X0[5, ] = gnow
+	X0[6, ] = znow    
 
-		Z0 = numeric(3) # shocks
-		X1 = Re(r_gensys$G1 %*% X0 + r_gensys$impact %*% Z0)
+	Z0  <- matrix(0, 3, n) # shocks
+	X1 = Re(r_gensys$G1 %*% X0 + r_gensys$impact %*% Z0) # 実数部のみを扱う
 
-		R[i] = X1[3] * 100
-		pi[i] = X1[2] * 100
-		y[i] = X1[1] * 100
-	}
-
-	data.frame(Rpast=Rpast, c=c, y=y, pi=pi, R=R)
+	data.frame(Rpast=Rpast, c=c, y=X1[1, ] * 100, pi=X1[2, ] * 100, R=X1[3, ] * 100)
 })
 
 non_linear <- with(bound, {
@@ -52,41 +46,41 @@ non_linear <- with(bound, {
 	pi <- numeric(n)
 	R <- numeric(n) # Juliaのコードではrnに対応
 
-	for(i in 1:n){
-		gnow <- 0
-		znow <- zmin
-		rnow <- 0
+	gnow <- rep(0, n)
+	znow <- rep(zmin, n)
+	rnow <- rep(0, n)
 
-		y_star <- calcY_star(gnow)
+	y_star <- calcY_star(gnow)
 
-		gp  <- rho_g*gnow
-		zp  <- rho_z*znow
-		rp  <- rep(0, length(rnow))
+	gp  <- rho_g*gnow
+	zp  <- rho_z*znow
+	rp  <- rep(0, length(rnow))
 
-		X <- matrix(c(Rpast[i], gp, zp, rp), 4, byrow=TRUE) * slopecon[, 1] + slopecon[, 2]
-		rownames(X) <- c("R", "gp", "zp", "rp")
-		p2s <- poly2s(t(X))
-		P <- p2s %*% r_solve$coef
+	# non-ZLBとZLBのfc1とfp1を同時に計算
+	X <- matrix(c(Rpast, gp, zp, rp), 4, byrow=TRUE) * slopecon[, 1] + slopecon[, 2]
+	rownames(X) <- c("R", "gp", "zp", "rp")
+	p2s <- poly2s(t(X))
+	P <- p2s %*% r_solve$coef
 
-		fc1 <- P[, "c0n"] # coeffcn
-		fp1 <- P[, "pi0n"] # coeffpn
+	fc1 <- P[, "c0n"] # coeffcn
+	fp1 <- P[, "pi0n"] # coeffpn
 
-		c[i] <- calcC(fc1)
-		pi[i] <- calcPi(c[i], fp1)
-		y[i] <- calcY(c[i], pi[i], gp)
-	#	print(sprintf("y:%f, pi:%f, Rpast:%f, rnow:%f, ystar:%f", y[i], pi[i], Rpast[i], rnow, y_star))
-		R[i] <- calcR(y[i], pi[i], Rpast[i], rnow, y_star)
+	# next period's c and pi (obtained by next period's fc and fp)
+	c <- calcC(fc1)
+	pi <- calcPi(c, fp1)
+	y <- calcY(c, pi, gp)
+	R <- calcR(y, pi, Rpast, rnow, y_star)
 
-		if (is.na(R[i]) || R[i]<1.0){
-			fc1 <- P[, "c0b"] # coeffcb
-			fp1 <- P[, "pi0b"] # coeffpb
+	flag <- is.na(R) | R<1.0 # ZLBに引っかかったフラグ
 
-			c[i] <- calcC(fc1)
-			pi[i] <- calcPi(c[i], fp1)
-			y[i] <- calcY(c[i], pi[i], gp)
-			R[i] <- 1
-		}
-	}
+	fc1 <- P[, "c0b"] # coeffcb
+	fp1 <- P[, "pi0b"] # coeffpb
+
+	c[flag] <- calcC(fc1[flag])
+	pi[flag] <- calcPi(c[flag], fp1[flag])
+	y[flag] <- calcY(c[flag], pi[flag], gp[flag])
+	R[flag] <- 1
+
 	data.frame(Rpast=Rpast, c=log(c/ss$c) * 100, y=log(y/ss$y) * 100, pi=log(pi/ss$pi) * 100, R=log(R/ss$R) * 100)
 })
 

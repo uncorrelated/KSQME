@@ -17,38 +17,33 @@ quasi_linear <- with(bound, {
 	pi <- numeric(n)
 	R <- numeric(n) # Juliaのコードではrnに対応
 
-	for(i in 1:n){
-		gnow <- 0
-		znow <- zmin
-		rnow <- 0
+	gnow <- rep(0, n)
+	znow <- rep(zmin, n)
+	rnow <- rep(0, n)
 
-		# non-ZLBとZLBのfc1とfp1を同時に計算
-		X <- matrix(c(Rpast[i], gnow, znow, rnow), 4, byrow=TRUE) * slopecon[, 1] + slopecon[, 2]
-		rownames(X) <- c("R", "gp", "zp", "rp")
-		p2s <- poly2s(t(X))
-		P <- p2s %*% r_solve$coef
+	# non-ZLBとZLBのfc1とfp1を同時に計算
+	X <- matrix(c(Rpast, gnow, znow, rnow), 4, byrow=TRUE) * slopecon[, 1] + slopecon[, 2]
+	rownames(X) <- c("R", "gp", "zp", "rp")
+	p2s <- poly2s(t(X))
+	P <- p2s %*% r_solve$coef
 
-		# first assume the ZLB is not binding, and use coeffcn and coeffpn
-		fc1 <- P[, "c0n"] # coeffcn
-		fp1 <- P[, "pi0n"] # coeffpn
+	# first assume the ZLB is not binding, and use coeffcn and coeffpn
+	fc1 <- P[, "c0n"] # coeffcn
+	fp1 <- P[, "pi0n"] # coeffpn
 
-		# next period's c and pi (obtained by next period's fc and fp)
-		c1 <- calcC(fc1, fp1, Rpast[i], znow, rnow)
-		pi1 <- calcPi(c1, fp1)
-		y1 <- calcY(c1, gnow)
-		R1 <- calcR(Rpast[i], c1, pi1, rnow)
+	# next period's c and pi (obtained by next period's fc and fp)
+	c <- calcC(fc1, fp1, Rpast, znow, rnow)
+	pi <- calcPi(c, fp1)
+	y <- calcY(c, gnow)
+	R <- calcR(Rpast, c, pi, rnow)
 
-		if (is.na(R1) || R1 < -1*ss$R){
-			c1 <- calcC(fc1, fp1, Rpast[i], znow, rnow, TRUE)
-			pi1 <- calcPi(c1, fp1)
-			y1 <- calcY(c1, gnow)
-			R1 <- -1*ss$R
-		}
+	flag <- is.na(R) | R < -1*ss$R # ZLBに引っかかったフラグ
 
-		R[i] = R1
-		pi[i] = pi1
-		y[i] = y1
-	}
+	c[flag] <- calcC(fc1[flag], fp1[flag], Rpast[flag], znow[flag], rnow[flag], TRUE)
+	pi[flag] <- calcPi(c[flag], fp1[flag])
+	y[flag] <- calcY(c[flag], gnow[flag])
+	R[flag] <- -1*ss$R
+
 	data.frame(Rpast=Rpast, c=c, y=y, pi=pi, R=R)
 })
 
@@ -63,25 +58,19 @@ linear <- with(bound, {
 	pi <- numeric(n)
 	R <- numeric(n) # Juliaのコードではrnに対応
 
-	for(i in 1:n){
-		gnow <- 0
-		znow <- zmin
-		rnow <- 0
+	gnow <- 0
+	znow <- zmin
+	rnow <- 0
 
-		X0 = numeric(8)
-		X0[3] = Rpast[i]
-		X0[5] = gnow
-		X0[6] = znow    
+	X0 <- matrix(0, 8, n)
+	X0[3, ] = Rpast
+	X0[5, ] = gnow
+	X0[6, ] = znow    
 
-		Z0 = numeric(3) # shocks
-		X1 = Re(r_gensys$G1 %*% X0 + r_gensys$impact %*% Z0)
+	Z0  <- matrix(0, 3, n) # shocks
+	X1 = Re(r_gensys$G1 %*% X0 + r_gensys$impact %*% Z0) # 実数部のみを扱う
 
-		R[i] = X1[3]
-		pi[i] = X1[2] 
-		y[i] = X1[1] 
-	}
-
-	data.frame(Rpast=Rpast, c=c, y=y, pi=pi, R=R)
+	data.frame(Rpast=Rpast, c=c, y=X1[1, ], pi=X1[2, ], R=X1[3, ])
 })
 
 
