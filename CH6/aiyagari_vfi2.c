@@ -19,7 +19,7 @@ SEXP VFI(SEXP r, SEXP alpha, SEXP beta, SEXP delta, SEXP mu, SEXP b, SEXP s, SEX
 	int *kfunG, *kfunG_old;
 	int nor, noc, Nl, diff_int, err_int;
 	 /* ループ用の変数群 */
-	unsigned i, j=0, iter, kc, lc, lcc, kcc, kcc1, kcc2;
+	unsigned i, iter, kc, lc, lcc, kcc, kcc1, kcc2;
 	int kccmax, t2, t3; /* プログラムの構造上、マイナスが代入されるのでint */
 
 /* Rが提供する関数を用いて、第1から第6引数が実数か確認 */
