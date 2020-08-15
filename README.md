@@ -33,7 +33,7 @@
 	R CMD SHLIB aiyagari_vfi1.c
 	R CMD SHLIB aiyagari_vfi2.c
 
-Windowsでも同様にdllを作れ実行できるはずですが、まだ試していません。
+[Rtools](https://cran.r-project.org/bin/windows/Rtools/)をインストールし、環境変数のPATHに`[インストール先/usr/bin]`を追加すれば、MS-Windowsでも同様にdllを作成でき、実行できます。
 
 図4のプロットでは、これもオプションとして、さらにマルチコア対応となっています。Cの拡張とマルチコアを利用することで、純粋なRのコードと比較してかなりの処理時間の短縮が可能になります。手元の古めの計算機では70〜140倍といった差異になりました。
 

@@ -37,6 +37,9 @@ vfi_type <- "aiyagari_vfi1"
 # (2) VALUE FUNCTION (USE FINER GRID FOR CONTROL)
 # vfi_type <- "aiyagari_vfi2" # 時間がかかるが精度がアップ
 
+# Windows環境下で平行処理パッケージが（？）ワーキングディレクトリを見失う問題の回避
+vfi_type <- paste(getwd(), vfi_type, sep="/")
+
 # 演算ルーチンを指定する
 # 1:R, 2:C, 4:R/MP, 8:C/MP
 # 足し算で連続実行でき、ベンチマークを行える。例えば3を指定するとRとCのルーチンでそれぞれ計算（結果は同じ）

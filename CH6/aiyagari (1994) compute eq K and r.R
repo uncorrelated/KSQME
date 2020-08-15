@@ -20,6 +20,9 @@ vfi_type <- "aiyagari_vfi1"
 # (2) VALUE FUNCTION (USE FINER GRID FOR CONTROL)
 # vfi_type <- "aiyagari_vfi2" # 時間がかかるが精度がアップ
 
+# Windows環境下で平行処理パッケージが（？）ワーキングディレクトリを見失う問題の回避
+vfi_type <- paste(getwd(), vfi_type, sep="/")
+
 #
 # （1と2の処理は別ファイルに移した）
 # =3 compute eq K and r : method 1 : search over r-grid from the bottom 
