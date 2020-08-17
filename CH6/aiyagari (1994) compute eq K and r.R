@@ -161,13 +161,11 @@ print(system.time({
 
 		errTol = 0.001;
 		steptol = 1e-4
-		step <- 1e+4
 
 		for(i in 1:100){
-			if(r_vfi_m$err < errTol || step < steptol){
+			if(r_vfi_m$err < errTol || abs((rate_l - rate_h)/2) < steptol){
 				break;
 			}
-			err0 <- r_vfi_m$err
 			if(r_vfi_m$flag == r_vfi_l$flag){
 				r_vfi_l <- r_vfi_m
 				rate_l <- r_vfi_m$rate
@@ -176,7 +174,6 @@ print(system.time({
 				rate_h <- r_vfi_m$rate
 			}
 			r_vfi_m <- calcVFI((rate_l + rate_h)/2)
-			step <- abs(r_vfi_m$err - err0)
 #			print(r_vfi_m$rate)
 		}
 
