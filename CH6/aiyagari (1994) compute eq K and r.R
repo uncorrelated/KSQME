@@ -128,7 +128,7 @@ print(system.time({
 		# 明示されていないがvif関数内で計算したgridkとkfunもプロットで使う   
 	}else if(5==indE){
 		#
-		# Matlabコードには無かったが、3==indEが総当たりアルゴリズムで、4==indEがなぜか収束しないので二分探索法での探索を用意する
+		# Matlabコードには無かったが、3==indEが総当たりアルゴリズムで、4==indEがなぜか収束しないので二分法での探索を用意する
 		#
 		tm_baseline <- calcTM(sig)    
 		calcK <- function(rate){
