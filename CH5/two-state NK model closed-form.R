@@ -26,6 +26,11 @@ closed_form_solution <- function(p_H){
 	})
 }
 
-closed_form_solution(0)
-closed_form_solution(0.025)
+SolveNPrint <- function(p_H){
+	print(paste("p_H", p_H, sep=":"))
+	print(closed_form_solution(p_H))
+}
+
+SolveNPrint(0)
+SolveNPrint(0.025)
 
