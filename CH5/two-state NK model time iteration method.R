@@ -35,7 +35,7 @@ time_iteration_method <- function(p_H){
 			# 期待値を所与として最適化
 			r_s = pmax(r_star + phi*E[,2], 0)
 			y_s = E[,1] - (r_s - E[,2] - grid_states);
-			pi_s = kapper*y_s + beta*E[,2]
+			pi_s = kappa*y_s + beta*E[,2]
 
 			# 新しい政策関数を保存
 			policy_new[,] <- c(y_s, pi_s, r_s)

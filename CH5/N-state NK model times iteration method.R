@@ -19,7 +19,7 @@ dparam <- list(
 )
 
 dparam$beta = 1/(1 + dparam$r_star/100)
-dparam$kapper = with(dparam, (1-alpha)*(1-alpha*beta)/alpha*(1/sigma+omega)/(1+omega*theta) )
+dparam$kappa = with(dparam, (1-alpha)*(1-alpha*beta)/alpha*(1/sigma+omega)/(1+omega*theta) )
 
 # 需要者{の状態/へのショック}のパラメーター
 gparam <- list(
@@ -62,14 +62,14 @@ policy <- with(dparam, {
 		E <- TM %*% policy_old
 
 		# 期待値を所与として最適化
-        	pi_s <- (beta*E[,2] + Grid[, 2]) / (1 + kapper^2 / lambda)
-		y_s <- (-kapper / lambda) * pi_s
+        	pi_s <- (beta*E[,2] + Grid[, 2]) / (1 + kappa^2 / lambda)
+		y_s <- (-kappa / lambda) * pi_s
 		r_s <- (1 / sigma)*(E[, 1] - y_s + Grid[, 1]) + E[, 2] # 記事ではσ=1が暗に仮定されていた
 
 		# マイナス金利のときは、ゼロ金利として再計算
 		f <- 0 > r_s # fには条件文（と言うか論理式）の結果になるTRUE/FALSEのベクトルが入る
 		y_s[f] <- (E[, 1] - sigma*(0 - E[, 2]) + Grid[, 1])[f] # 記事ではσ=1が暗に仮定されていた
-		pi_s[f] <- (kapper*y_s + beta*E[, 2] + Grid[, 2])[f]
+		pi_s[f] <- (kappa*y_s + beta*E[, 2] + Grid[, 2])[f]
 		r_s[f] <- 0
 
 		# 新しい政策関数を保存

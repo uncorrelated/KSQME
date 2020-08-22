@@ -15,9 +15,9 @@ closed_form_solution <- function(p_H){
 		# 本文の式のうちr_L=0とr_Hは代入して消され、方程式は4本の減っている
 		A <- matrix(c(
 			-1+(1-p_H), p_H, -(phi-1)*(1-p_H), -(phi-1)*p_H,
-			kapper, 0, -1+beta*(1-p_H), beta*p_H,
+			kappa, 0, -1+beta*(1-p_H), beta*p_H,
 			(1 - p_L), -1+p_L, 1-p_L, p_L,
-			0, kapper, beta*(1-p_L), -1+beta*p_L
+			0, kappa, beta*(1-p_L), -1+beta*p_L
 		),4,4, byrow=TRUE)
 		b <- matrix(c(r_star - s_H, 0, -s_L, 0), 4, 1)
 
