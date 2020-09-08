@@ -12,6 +12,10 @@ double	rent_f(double agg_cap, double agg_lab, double tfp, double alpha, double d
 double	marg_util(double cons, double risk_aversion);
 void	markov(double *tran, int ng, int ns, int *r);
 
+SEXP	getvar(const unsigned char *name, SEXP env);
+SEXP	getListElement(const unsigned char *name, SEXP list);
+int	toInt(SEXP a);
+
 #define epsilon 1e-8
 #define idx2(e,z) (e + ne*(z))
 #define idx3(e,k,z) (e + ne*(k) + ne*nk*(z))
@@ -33,7 +37,7 @@ FILE	*fileopen(const char *fname, int debug_c){
 }
 #endif
 
-SEXP	RHS_Euler(SEXP asset, SEXP e_state, SEXP K_agg, SEXP L_agg, SEXP z_state, SEXP consf, SEXP xgrid, SEXP kgrid, SEXP trans_ez, SEXP _na, SEXP _ne, SEXP _nk, SEXP _nz, SEXP _alpha, SEXP _beta, SEXP _gamma, SEXP _delta, SEXP endow, SEXP tfp)
+SEXP	RHS_Euler(SEXP asset, SEXP e_state, SEXP K_agg, SEXP L_agg, SEXP z_state, SEXP consf, SEXP xgrid, SEXP env)
 {
 	int	alen, glen, i, kloc, na, ne, nk, nz, z, e;
 	double	weight, coh, cons, cons0, cons1, alpha, beta, gamma, delta, rent, wage;
@@ -41,19 +45,30 @@ SEXP	RHS_Euler(SEXP asset, SEXP e_state, SEXP K_agg, SEXP L_agg, SEXP z_state, S
 	SEXP	rv1;
 #if DEBUG==1
 FILE	*stream, *stream2, *stream3, *stream4;
-static	int debug_c = 0;
-int	z2, e2, k;
+static	int debug_c = 0, k;
 #endif
+SEXP	gparam, dparam, kgrid, trans_prob, trans_ez, endow, tfp;
 
-	na = INTEGER(_na)[0];
-	ne = INTEGER(_ne)[0];
-	nk = INTEGER(_nk)[0];
-	nz = INTEGER(_nz)[0];
+/* Rのグローバル領域の変数を引っ張る */
+	dparam = getvar("dparam", env);
+	gparam = getvar("gparam", env);
+	kgrid = getvar("kgrid", env);
 
-	alpha = REAL(_alpha)[0];
-	beta = REAL(_beta)[0];
-	gamma = REAL(_gamma)[0];
-	delta = REAL(_delta)[0];
+	na = toInt(getListElement("na", gparam));
+	ne = toInt(getListElement("ne", dparam));
+	nk = toInt(getListElement("nk", gparam));
+	nz = toInt(getListElement("nz", dparam));
+
+	alpha = REAL(getListElement("alpha", dparam))[0];
+	beta = REAL(getListElement("beta", dparam))[0];
+	gamma = REAL(getListElement("gamma", dparam))[0];
+	delta = REAL(getListElement("delta", dparam))[0];
+
+	trans_prob = getvar("trans_prob", env);
+	trans_ez = getListElement("ez", trans_prob);
+
+	endow = getListElement("endow", dparam);
+	tfp = getListElement("tfp", dparam);
 
 	glen = length(kgrid);
 	alen = length(asset);
@@ -256,19 +271,32 @@ SEXP	Cmarkov(SEXP tran, SEXP ng, SEXP ns)
 
 #define IsSplineInterpolation 0
 
-SEXP	law_of_motion_sim(SEXP policy, SEXP _numi, SEXP _nums, SEXP trans_ez, SEXP trans_zz, SEXP kgrid, SEXP grid, SEXP ne)
+SEXP	law_of_motion_sim(SEXP policy, SEXP env)
 {
 	SEXP	k_path, u_path, z_path, dim, lst, lstnames;
 	double	*cap0, *cap1, savings0, savings1, wght, rndw, count, sum, pr_next;
-	int	*emp0, *emp1, i, j, index, it, numi, nums, kloc, glen, *np, *nez, *nzz, e;
+	int	*emp0, *emp1, i, j, index, it, numi, nums, kloc, glen, *np, *nez, *nzz, e, ne;
 #if IsSplineInterpolation==1
 	CubicSpline	**cs;
 #endif
+	SEXP	dparam, gparam, sparam, trans_prob, trans_ez, trans_zz, kgrid, grid;
+
+/* Rのグローバル領域の変数を引っ張る */
+	dparam = getvar("dparam", env);
+	gparam = getvar("gparam", env);
+	sparam = getvar("sparam", env);
+	kgrid = getvar("kgrid", env);
+	grid = getvar("grid", env);
+
+	ne = toInt(getListElement("ne", dparam));
+	trans_prob = getvar("trans_prob", env);
+	trans_ez = getListElement("ez", trans_prob);
+	trans_zz = getListElement("zz", trans_prob);
+
+	numi = toInt(getListElement("numi", sparam));
+	nums = toInt(getListElement("nums", sparam));
 
 	glen = length(kgrid);
-
-	numi = INTEGER(_numi)[0];
-	nums = INTEGER(_nums)[0];
 
 	k_path = PROTECT(allocVector(REALSXP, nums));
 	u_path = PROTECT(allocVector(REALSXP, nums));
@@ -379,7 +407,7 @@ SEXP	law_of_motion_sim(SEXP policy, SEXP _numi, SEXP _nums, SEXP trans_ez, SEXP 
 
 				pr_next = REAL(trans_ez)[ tez_idx(emp0[i], INTEGER(z_path)[it], 1, INTEGER(z_path)[it + 1]) ] / REAL(trans_zz)[ tzz_idx(INTEGER(z_path)[it], INTEGER(z_path)[it + 1]) ];
 
-				for(e=1, emp1[i]=1; e<=INTEGER(ne)[0]; e++){
+				for(e=1, emp1[i]=1; e<=ne; e++){
 					if (rndw <= pr_next) {
 						emp1[i] = e;
 						break;
@@ -438,5 +466,52 @@ SEXP	law_of_motion_sim(SEXP policy, SEXP _numi, SEXP _nums, SEXP trans_ez, SEXP 
 	UNPROTECT(5);
 
 	return(lst);
+}
+
+SEXP getListElement(const unsigned char *name, SEXP list)
+{
+	SEXP elmt = R_NilValue, names = getAttrib(list, R_NamesSymbol);
+	int i;
+	unsigned char	buf[1024];
+
+	for (i = 0; i < length(list); i++)
+		if(strcmp(CHAR(STRING_ELT(names, i)), name) == 0) {
+			elmt = VECTOR_ELT(list, i);
+			return elmt;
+		}
+	
+	sprintf(buf, "Couldn't find the variable: %s", name);
+	error(buf);
+	
+	return R_NilValue; /* This part never runs. */
+}
+
+SEXP getvar(const unsigned char *name, SEXP env)
+{
+	SEXP		r;
+	unsigned char	buf[1024];
+
+	if(!isEnvironment(env))
+		error("env should be an environment");
+	
+	if(R_NilValue == (r=findVar(install(name), env))){
+		sprintf(buf, "Couldn't find the variable: %s", name);
+		error(buf);
+	}
+
+	return r;
+}
+
+int toInt(SEXP a)
+{
+	if(isInteger(a)){
+		return INTEGER(a)[0];
+	}
+
+	if(isReal(a)){
+		return (int)(REAL(a)[0]);
+	}
+
+	error("Couldn't convert the variable to an integer.");
 }
 

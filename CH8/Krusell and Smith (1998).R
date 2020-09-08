@@ -137,10 +137,6 @@ with(dparam, {
 
 dll <- dyn.load(paste("KnS1998", .Platform$dynlib.ext, sep = ""))
 
-markov <- function(tran, ng, ns){
-	.Call("Cmarkov", tran, as.integer(ng), as.integer(ns))
-}
-
 end_grid_method <- function(lreg){
 	with(dparam,{
 		with(gparam, {
@@ -158,7 +154,7 @@ end_grid_method <- function(lreg){
 			}
 
 			RHS_Euler <- function(asset, e_state, K_agg, z_state, consf, xgrid){
-				.Call("RHS_Euler", asset, as.integer(e_state), K_agg, L_agg, as.integer(z_state), consf, xgrid, kgrid, trans_prob$ez, as.integer(na), as.integer(ne), as.integer(nk), as.integer(nz), alpha, beta, gamma, delta, endow, tfp)
+				.Call("RHS_Euler", asset, as.integer(e_state), K_agg, L_agg, as.integer(z_state), consf, xgrid, .GlobalEnv)
 			}
 
 			#### 4重ループを展開した数列をつくる ####
@@ -276,7 +272,7 @@ end_grid_method <- function(lreg){
 set.seed(225)
 law_of_motion_sim <- function(policy){
 	# パラメーターによってはPathにNAが大量に入るので、本当はエラーチェックがいる
-	.Call("law_of_motion_sim", policy, as.integer(sparam$numi), as.integer(sparam$nums), trans_prob$ez, trans_prob$zz, kgrid, grid, as.integer(dparam$ne))
+	.Call("law_of_motion_sim", policy, .GlobalEnv)
 }
 
 regress <- function(k_path, z_path, lreg){
