@@ -41,3 +41,14 @@
 - [CH7/profile for lifetime assets and consumption by OLG.R](https://github.com/uncorrelated/KSQME/blob/master/CH7/profile%20for%20lifetime%20assets%20and%20consumption%20by%20OLG.R) 第2節 世代重複モデル（図3のプロット）
 - [CH7/profile for lifetime assets and consumption by OLG in various scenario.R](https://github.com/uncorrelated/KSQME/blob/master/CH7/profile%20for%20lifetime%20assets%20and%20consumption%20by%20OLG%20in%20various%20scenario.R) 第2節 世代重複モデル（図4のプロット）
 
+#### 第8回 定量的マクロ経済学のフロンティア
+- [CH8/Krusell and Smith (1998).R](https://github.com/uncorrelated/KSQME/blob/master/CH8/Krusell%20and%20Smith%20(1998).R) 第2節 クルセス＝スミス・モデル（の計算）
+- [CH8/Krusell and Smith (1998) plot policy function.R](https://github.com/uncorrelated/KSQME/blob/master/CH8/Krusell%20and%20Smith%20(1998)%20plot%20policy%20function.R) 第2節 クルセス＝スミス・モデル（のプロット）
+
+Krusell and Smith (1998)モデルは、部分的にCを使ったコードのみとなります。UNIX/Linux環境では添付のMakefileで、Cのソースコードのコンパイルができます。Windowsでは、
+
+	R CMD SHLIB KnS1998.c cubic_spline.c linear_interpolation.c which.c
+
+としてください。
+
+なお、プロットは計算結果を保存したファイルを用いるので、先に計算しないとエラーとなります。
