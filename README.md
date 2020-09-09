@@ -13,6 +13,11 @@
 - [CH2/two-period root-finding method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20root-finding%20method.R) 第5節1 非線形方程式のゼロ点を探す
 - [CH2/two-period projection method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20projection%20method.R) 第5節2 射影法
 
+#### 第3回 動的計画法
+- [CH3/Robinson Cruesoe Model.R](https://github.com/uncorrelated/KSQME/blob/master/CH3/Robinson%20Cruesoe%20Model.R) 第2節 ロビンソン・クルーソーとベルマン方程式
+- [CH3/Discretized Dynamic Programming.R](https://github.com/uncorrelated/KSQME/blob/master/CH3/Discretized%20Dynamic%20Programming.R) 第5節 無限期間モデルの解法（状態変数と操作変数を離散化）
+- [CH3/Parametric Dynamic Programming.R](https://github.com/uncorrelated/KSQME/blob/master/CH3/Parametric%20Dynamic%20Programming.R) 第5節 無限期間モデルの解法（操作変数が連続的）
+
 #### 第4回 オイラー方程式と多項式近似
 - [CH4/time iteration method.R](https://github.com/uncorrelated/KSQME/blob/master/CH4/time%20iteration%20method.R) 第2節 分権経済と時間反復法
 - [CH4/approximation to the Runge function.R](https://github.com/uncorrelated/KSQME/blob/master/CH4/approximation%20to%20the%20Runge%20function.R) 第3節 多項式近似
