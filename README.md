@@ -49,6 +49,7 @@
 #### 第8回 定量的マクロ経済学のフロンティア
 - [CH8/Krusell and Smith (1998).R](https://github.com/uncorrelated/KSQME/blob/master/CH8/Krusell%20and%20Smith%20(1998).R) 第2節 クルセス＝スミス・モデル（の計算）
 - [CH8/Krusell and Smith (1998) plot policy function.R](https://github.com/uncorrelated/KSQME/blob/master/CH8/Krusell%20and%20Smith%20(1998)%20plot%20policy%20function.R) 第2節 クルセス＝スミス・モデル（のプロット）
+- [CH8/McKay, Nakamura and Steinsson (2016).R](https://github.com/uncorrelated/KSQME/blob/master/CH8/McKay,%20Nakamura%20and%20Steinsson%20(2016).R) 第3節 HANKモデルとフォワード・ガイダンス・パズル
 
 Krusell and Smith (1998)モデルは、部分的にCを使ったコードのみとなります。UNIX/Linux環境では添付のMakefileで、Cのソースコードのコンパイルができます。Windowsでは、
 
@@ -57,3 +58,9 @@ Krusell and Smith (1998)モデルは、部分的にCを使ったコードのみ�
 としてください。
 
 なお、プロットは計算結果を保存したファイルを用いるので、先に計算しないとエラーとなります。
+
+HANKモデル（McKay, Nakamura and Steinsson (2016)）は、部分的に[Rcpp](http://www.rcpp.org/)/[Eigen](http://eigen.tuxfamily.org)/[Spectra](https://spectralib.org/)を使ったパッケージを用いたコードのみとなります。EigenとSpectraのテンプレートライブラリをインストールした後、`/CH8/MNS2016/src/Makevars`のPKG_CXXFLAGS行の-Iをインストール先に書き換えたあと、CH8ディレクトリで、
+
+	R CMD INSTALL MNS2016
+
+とパッケージをインストールすることでC++部分のセットアップができ、`McKay, Nakamura and Steinsson (2016).R`をRから呼び出して実行可能になります。まだ冗長な部分はあるのですが、手元の計算機ではJulia版の3倍以上の高速化になりました。

@@ -1,0 +1,13 @@
+Package: MNS2016
+Type: Package
+Title: Subroutines to solve McKay, Nakamura and Steinsson (2016) model in Chapter 8, KS
+Version: 1.0
+Date: 2020-09-13
+Author: uncorrelated zombie
+Maintainer: zombie <uncorrelated@yahoo.co.jp>
+Description: One paragraph description of what the package does as one
+        or more full sentences.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.5)
+LinkingTo: Rcpp
+SystemRequirements: C++11
