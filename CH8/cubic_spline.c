@@ -10,7 +10,6 @@ void CubicSplineInterpolation(CubicSpline *s3, double *x, double *y, unsigned n)
 	double	a, b, c, d, dx;
 
 	for(i=0; i<n; i++){
-		next:
 
 		/* binary search */
 		l = 0;
@@ -19,15 +18,8 @@ void CubicSplineInterpolation(CubicSpline *s3, double *x, double *y, unsigned n)
 		while(l < r){
 			m = (l + r)/2;
 
-			if(x[i] == s3->x[m]){
-				y[i++] = s3->y[m];
-				if(i>=n)
-					return;
-				goto next;
-			}
-
-			if(s3->x[m] < x[i]){
-				if(x[i] < s3->x[(m + 1) % s3->n]){
+			if(s3->x[m] <= x[i]){
+				if(x[i] < s3->x[m + 1]){ /* m is always less than kn - 1. */
 					break;
 				}
 				l = m + 1;
@@ -40,7 +32,6 @@ void CubicSplineInterpolation(CubicSpline *s3, double *x, double *y, unsigned n)
 		b = (3.0*(s3->y[m+1] - s3->y[m])/s3->H[m] - 2.0*s3->rh[m] - s3->rh[m+1]) / s3->H[m];
 		c = s3->rh[m];
 		d = s3->y[m]; 
-
 		dx = x[i] - s3->x[m];
 		y[i] = dx*(dx*(dx*a + b) + c) + d;
 	}

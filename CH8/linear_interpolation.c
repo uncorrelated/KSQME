@@ -10,7 +10,6 @@ void LinearInterpolation(double *knot_x, double *knot_y, unsigned kn, double *x,
 	double	p, dx_l, dx_r, dx, dy;
 
 	for(i=0; i<n; i++){
-		next: 
 
 		if(x[i] <= knot_x[0]){
 			#if OutRangeProcessingType==1
@@ -41,13 +40,8 @@ void LinearInterpolation(double *knot_x, double *knot_y, unsigned kn, double *x,
 
 /*			fprintf(stderr, "x[%d]=%f, l:%d, r:%d\n", i, x[i], l, r); */
 
-			if(x[i] == knot_x[m]){
-				y[i++] = knot_y[m];
-				goto next;
-			}
-
-			if(knot_x[m] < x[i]){
-				mp1 = (m + 1) % kn;
+			if(knot_x[m] <= x[i]){
+				mp1 = m + 1; /* m is always less than kn - 1. */
 				if(x[i] < knot_x[mp1]){
 					break;
 				}
@@ -57,10 +51,10 @@ void LinearInterpolation(double *knot_x, double *knot_y, unsigned kn, double *x,
 			}
 		}
 
-		mp1 = (m + 1) % kn;
-		dx_l = fabs(knot_x[m] - x[i]); /* dx_l > 0 because x[i] == knot_x[m] doesn't appear. */ 
+		mp1 = m + 1;
+		dx_l = fabs(knot_x[m] - x[i]);
 		dx_r = fabs(knot_x[mp1] - x[i]);
-		p = dx_r/(dx_l + dx_r);
+		p = dx_r/(dx_l + dx_r); /* dx_l + dx_r > 0 because x[i] == knot_x[n - 1] doesn't appear. */
 
 		y[i] = p*knot_y[m] + (1-p)*knot_y[mp1];
 /*		fprintf(stderr, "x[%d]=%f, y[%d]=%f, l:%d, m:%d, %d, p:%f, r:%d\n", i, x[i], i, y[i], l, m, mp1, p, r);	*/
