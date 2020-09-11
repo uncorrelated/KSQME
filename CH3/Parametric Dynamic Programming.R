@@ -143,7 +143,7 @@ write.table(data.frame(
 ), file="err_pdp.csv", col.names=TRUE, row.names=FALSE, sep=",")
 
 if(!file.exists(file_err_ddp)){
-	stop(sprintf("Couldn't find the file:'%s'. You need to run 'Discretized Dynamic Programming.R' first."))
+	stop(sprintf("Couldn't find the file:'%s'. You need to run 'Discretized Dynamic Programming.R' beforehand."))
 }
 err_ddp <- read.table(file_err_ddp, sep=",", header=TRUE)
 
