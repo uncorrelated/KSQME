@@ -3,32 +3,22 @@
 \alias{MNS2016}
 \docType{package}
 \title{
-  A short title line describing what the package does
+Subroutines to solve the McKay, Nakamura and Steinsson (2016) model
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+This codes was ported from the repositories of Keizai Seminar Magazine feature, Quantitative Macroeconomics.  
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
 }
 \author{
-Your Name, email optional.
-
-Maintainer: Your Name <your@email.com>
+Maintainer: Zombie, uncorrelated <uncorrelated@yahoo.co.jp>
 }
 \references{
-  This optional section can contain literature or other references for
-  background information.
 }
-\keyword{ package }
+\keyword{ Keizai Seminar Quantitative Macroeconomics }
 \seealso{
-  Optional links to other man pages
 }
 \examples{
   \dontrun{
-     ## Optional simple examples of the most important functions
-     ## These can be in \dontrun{} and \donttest{} blocks.   
   }
 }
