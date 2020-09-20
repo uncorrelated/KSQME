@@ -11,6 +11,8 @@ using namespace Rcpp;
 using namespace Eigen;
 using namespace Spectra;
 
+int	which(const NumericVector array, int size, double a);
+
 // [[Rcpp::plugins("cpp11")]]
 // [[Rcpp::export]]
 List HH_dist(double beta, List param, NumericVector grid_a, NumericVector grid_a_NS, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c, NumericMatrix pf_n, NumericMatrix pf_sav) {
@@ -40,20 +42,7 @@ List HH_dist(double beta, List param, NumericVector grid_a, NumericVector grid_a
 			int indexToday = n_a_ns*i_z + i_a_NS; // Matlabとインデックス開始位置が異なる（Matlab:1, C++:0)
 
 			// Find the index j such that grid_a_NS(j) < aTomorrow <= grid_a_NS(j+1).
-			int j_a_NS = -1;
-
-			for(int k_a_NS = 0; k_a_NS < n_a_ns - 1; k_a_NS++){
-				if (aTomorrow <= min_a_ns){ // Make sure that MIN_A_NS = grid_a_NS(1) (= BL)
-					j_a_NS = 0;
-					break;
-				} else if (grid_a_NS[k_a_NS] < aTomorrow && aTomorrow <= grid_a_NS[k_a_NS + 1]){
-					j_a_NS = k_a_NS;
-					break;
-				} else if (aTomorrow > max_a_ns) {
-					j_a_NS = n_a_ns;
-					break;
-				}
-			}
+			int j_a_NS = which(grid_a_NS, n_a_ns - 1, aTomorrow);
 
 			/*
 			% Redistribute the current mass, Hist(i_a_NS,i_z), to the points (grid_a_NS(j), z(1)), (grid_a_NS(j), z(2)), (grid_a_NS(j), z(3)),
@@ -155,5 +144,35 @@ List HH_dist(double beta, List param, NumericVector grid_a, NumericVector grid_a
 	}
 
 	return List::create(Named("dist")=dist, Named("meanC")=meanC, Named("meanN")=meanN, Named("meanA")=meanA);
+}
+
+/*
+	a ∈ [array[0], array[size-1]]でarray[m] < a ≤ array[m+1]となるmを返す
+	a < array[0]のときは0、a > array[size-1]のときはsize-1
+*/
+int	which(const NumericVector array, int size, double a)
+{
+	int	l, r, m;
+
+	l = 0;
+	r = size - 1;
+	/*
+		if(a >= array[size-1]) return size-1; をループ前につけて、
+		while(l + 1 < r){ にして、if(a < array[m + 1]){ ... }を無くして、
+		l = m + 1;をl = m;にした方がたぶん速い。
+	*/
+	while(l < r){
+		m = (l + r)/2;
+
+		if(a > array[m]){
+			if(a <= array[m + 1]){ /* 端数切り捨てによりmは必ずm<size-1 */
+				return m;
+			}
+			l = m + 1;/* int型変数を/2をすると切り捨てになるので、下端を動かすときは+1しないと収束しない */
+		} else {
+			r = m;
+		}
+	}
+	return (l + r)/2;
 }
 
