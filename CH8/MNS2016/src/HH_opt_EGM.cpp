@@ -14,21 +14,6 @@ void RprintMatrix(NumericMatrix m, int s, int n){
 	}
 }
 
-
-double update(NumericMatrix m1, NumericMatrix m2){
-	double max = -1;
-	for(int j=0;j<m1.ncol();j++){
-		for(int i=0;i<m1.nrow();i++){
-			double d = fabs(m1(i,j) - m2(i,j));
-			if(max < d){
-				max = d;
-			}
-			m2(i,j) = m1(i,j); // m1とm2を入れ替えたら、不要になるはずのコード
-		}
-	}
-	return max;
-}
-
 // [[Rcpp::export]]
 List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c_init, NumericMatrix pf_n_init, NumericMatrix pf_sav_init) {
 
@@ -186,11 +171,13 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 		}
 
 		// Evaluate convergence.
-		NumericVector EGM_err(3);
-		EGM_err[0] = update(pf_c_new, pf_c); 
-		EGM_err[1] = update(pf_n_new, pf_n);
-		EGM_err[2] = update(pf_sav_new, pf_sav);
-		double EGM_maximum_error = max(EGM_err);
+		double EGM_maximum_error = -1, EGM_err;
+		if(EGM_maximum_error < (EGM_err = max(abs(pf_c_new - pf_c))))
+			EGM_maximum_error = EGM_err;
+		if(EGM_maximum_error < (EGM_err = max(abs(pf_n_new - pf_n))))
+			EGM_maximum_error = EGM_err;
+		if(EGM_maximum_error < (EGM_err = max(abs(pf_sav_new - pf_sav))))
+			EGM_maximum_error = EGM_err;
 
 //		RprintMatrix(pf_c, 100, 1);
 
@@ -199,12 +186,11 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 
 		// ! Update the policy functions for consumption, labor supply, and savings as well as the associated value function
 
-/* 値をコピーすると遅いので、参照を入れ替えようかと思ったが、見通しが悪い気がして保留している
+		// Rcppのオブジェクトは参照渡しなので、入れ替えコストは低い
 		NumericMatrix tmp;
 		tmp = pf_c; pf_c = pf_c_new; pf_c_new = tmp;
 		tmp = pf_n; pf_n = pf_n_new; pf_n_new = tmp;
 		tmp = pf_sav; pf_sav = pf_sav_new; pf_sav_new = tmp;
-*/
 
 		//     values = values_new
 	}
