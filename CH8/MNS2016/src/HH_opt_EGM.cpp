@@ -15,11 +15,7 @@ void RprintMatrix(NumericMatrix m, int s, int n){
 }
 
 // [[Rcpp::export]]
-List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c_init, NumericMatrix pf_n_init, NumericMatrix pf_sav_init) {
-
-	NumericMatrix pf_c(clone(pf_c_init)), pf_c_new(clone(pf_c_init)); // コンストラクタにそのまま放り込むと参照先が一緒になり、片方を更新したらもう片方も更新されてしまうので、cloneをしておく
-	NumericMatrix pf_n(clone(pf_n_init)), pf_n_new(clone(pf_n_init));
-	NumericMatrix pf_sav(clone(pf_sav_init)), pf_sav_new(clone(pf_sav_init));
+List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c, NumericMatrix pf_n, NumericMatrix pf_sav) {
 
 	// リストで渡される値は展開して型変換しておく
 	int max_egm_iter = as<int>(param["max_egm_iter"]);
@@ -32,6 +28,10 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 	double egm_err_tol = as<double>(param["egm_err_tol"]);
 	int max_egm_const_iter = as<int>(param["max_egm_const_iter"]);
 	double egm_const_err_tol = as<double>(param["egm_const_err_tol"]);
+
+	NumericMatrix pf_c_new(n_a, n_z);
+	NumericMatrix pf_n_new(n_a, n_z);
+	NumericMatrix pf_sav_new(n_a, n_z);
 
 	// WHILE LOOP: iterate until the policy functions converge.
 	int EGM_iter;
