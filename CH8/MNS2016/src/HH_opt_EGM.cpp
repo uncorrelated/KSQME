@@ -29,52 +29,6 @@ double update(NumericMatrix m1, NumericMatrix m2){
 }
 
 // [[Rcpp::export]]
-List EGMconstrained(List param, double aToday, double zToday, double RToday, double wToday, double tauToday, double dToday, int i_z){
-
-	double gamma = as<double>(param["gamma"]);
-	double psi = as<double>(param["psi"]);
-	NumericVector tau_bar = as<NumericVector>(param["tau_bar"]);
-	double bl = as<double>(param["bl"]);
-	double egm_err_tol = as<double>(param["egm_err_tol"]);
-	int max_egm_const_iter = as<int>(param["max_egm_const_iter"]);
-	double egm_const_err_tol = as<double>(param["egm_const_err_tol"]);
-
-	// Initial guess of the value of labor supply and the associated consumption value.
-	double nToday = 0.6;
-	double cToday = aToday + wToday*zToday*nToday - tauToday*tau_bar[i_z] + dToday - bl/RToday;
-
-	double labor_eq_diff = pow(cToday,-gamma)*wToday*zToday - pow(nToday, psi); // labor_eq_diff denotes the difference of the labor supply equation.
-
-	int EGM_const_iter;
-
-	// WHILE LOOP: iterate until we find a pair of labor supply and consumption that satisfies the labor supply equation.
-	//            Here we use the Newton-Raphson method.
-	for(EGM_const_iter=0; EGM_const_iter < max_egm_const_iter; EGM_const_iter++){
-
-		double labor_eq_adj  = -gamma*pow(cToday, -gamma - 1.0)*pow(wToday*zToday, 2.0) - psi*pow(nToday, psi-1.0);
-
-		nToday        = nToday - labor_eq_diff/labor_eq_adj;
-
-		cToday        = aToday + zToday*wToday*nToday - tauToday*tau_bar[i_z] + dToday - bl/RToday;
-
-		labor_eq_diff = pow(cToday, -gamma)*wToday*zToday - pow(nToday, psi);
-
-// Rprintf("EGM_const_iter:%d labor_eq_adj=%f\tnToday=%f\tcToday=%f\tlabor_eq_diff=%f\n", EGM_const_iter, labor_eq_adj, nToday, cToday, labor_eq_diff);
-
-		double EGM_const_err = fabs(labor_eq_diff);
-
-		if (EGM_const_err < egm_const_err_tol)
-			break;
-	}
-
-	if(EGM_const_iter >= max_egm_const_iter){
-		stop("iteration limit exceeded: EGM_const_iter >= max_egm_const_iter");
-	}
-
-	return List::create(Named("cToday")=cToday, Named("nToday")=nToday);
-}
-
-// [[Rcpp::export]]
 List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c_init, NumericMatrix pf_n_init, NumericMatrix pf_sav_init) {
 
 	NumericMatrix pf_c(clone(pf_c_init)), pf_c_new(clone(pf_c_init)); // コンストラクタにそのまま放り込むと参照先が一緒になり、片方を更新したらもう片方も更新されてしまうので、cloneをしておく

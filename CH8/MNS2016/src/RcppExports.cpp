@@ -28,24 +28,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// EGMconstrained
-List EGMconstrained(List param, double aToday, double zToday, double RToday, double wToday, double tauToday, double dToday, int i_z);
-RcppExport SEXP _MNS2016_EGMconstrained(SEXP paramSEXP, SEXP aTodaySEXP, SEXP zTodaySEXP, SEXP RTodaySEXP, SEXP wTodaySEXP, SEXP tauTodaySEXP, SEXP dTodaySEXP, SEXP i_zSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type param(paramSEXP);
-    Rcpp::traits::input_parameter< double >::type aToday(aTodaySEXP);
-    Rcpp::traits::input_parameter< double >::type zToday(zTodaySEXP);
-    Rcpp::traits::input_parameter< double >::type RToday(RTodaySEXP);
-    Rcpp::traits::input_parameter< double >::type wToday(wTodaySEXP);
-    Rcpp::traits::input_parameter< double >::type tauToday(tauTodaySEXP);
-    Rcpp::traits::input_parameter< double >::type dToday(dTodaySEXP);
-    Rcpp::traits::input_parameter< int >::type i_z(i_zSEXP);
-    rcpp_result_gen = Rcpp::wrap(EGMconstrained(param, aToday, zToday, RToday, wToday, tauToday, dToday, i_z));
-    return rcpp_result_gen;
-END_RCPP
-}
 // HH_opt_EGM
 List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c_init, NumericMatrix pf_n_init, NumericMatrix pf_sav_init);
 RcppExport SEXP _MNS2016_HH_opt_EGM(SEXP betaSEXP, SEXP paramSEXP, SEXP grid_aSEXP, SEXP grid_zSEXP, SEXP prob_zSEXP, SEXP wTodaySEXP, SEXP RTodaySEXP, SEXP tauTodaySEXP, SEXP dTodaySEXP, SEXP pf_c_initSEXP, SEXP pf_n_initSEXP, SEXP pf_sav_initSEXP) {
@@ -84,7 +66,6 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MNS2016_HH_dist", (DL_FUNC) &_MNS2016_HH_dist, 13},
-    {"_MNS2016_EGMconstrained", (DL_FUNC) &_MNS2016_EGMconstrained, 8},
     {"_MNS2016_HH_opt_EGM", (DL_FUNC) &_MNS2016_HH_opt_EGM, 12},
     {"_MNS2016_pchip", (DL_FUNC) &_MNS2016_pchip, 3},
     {NULL, NULL, 0}
