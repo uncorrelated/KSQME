@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "pchip.h"
+#include <cmath>
 
 using namespace Rcpp;
 
@@ -69,12 +70,12 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 				// Note that here we skip a root-finding algorithm, thereby making the algorithm much more efficient than the usual policy function iteration!
 				double EMUc = 0.0;
 				for(int j_z=0; j_z < n_z; j_z++)
-					EMUc += beta*RToday*(cond_prob_z[j_z]*pow(pf_c(i_a, j_z),-gamma));
+					EMUc += beta*RToday*(cond_prob_z[j_z]*std::pow(pf_c(i_a, j_z),-gamma));
 
-				double cToday = pow(EMUc, (-1.0/gamma));
+				double cToday = std::pow(EMUc, (-1.0/gamma));
 
 				// Derive labor supply today from the labor supply equation.
-				double nToday = pow(wToday*zToday*pow(cToday,-gamma), 1.0/psi);
+				double nToday = std::pow(wToday*zToday*std::pow(cToday,-gamma), 1.0/psi);
 
 				// Derive today's asset from the budget constraint. This current asset level is called the endogenous gridpoints.
 				double aToday = cToday + aTomorrow/RToday - wToday*zToday*nToday + tauToday*tau_bar[i_z] - dToday;
@@ -114,7 +115,7 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 
 					// Matlab互換Hermite補間
 					cToday = pchip(endog_grid_a(_, i_z), pf_c_int(_, i_z), aToday); // 別ファイルに用意した関数
-					nToday = pow(wToday*zToday*pow(cToday, -gamma), 1.0/psi);
+					nToday = std::pow(wToday*zToday*std::pow(cToday, -gamma), 1.0/psi);
 					aTomorrow = (aToday + wToday*zToday*nToday - tauToday*tau_bar[i_z] + dToday - cToday)*RToday;
 
 				} else {
@@ -130,7 +131,7 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 					nToday = 0.6;
 					cToday = aToday + wToday*zToday*nToday - tauToday*tau_bar[i_z] + dToday - bl/RToday;
 
-					double labor_eq_diff = pow(cToday,-gamma)*wToday*zToday - pow(nToday, psi); // labor_eq_diff denotes the difference of the labor supply equation.
+					double labor_eq_diff = std::pow(cToday,-gamma)*wToday*zToday - std::pow(nToday, psi); // labor_eq_diff denotes the difference of the labor supply equation.
 
 					int EGM_const_iter;
 
@@ -138,13 +139,13 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 					//            Here we use the Newton-Raphson method.
 					for(EGM_const_iter=0; EGM_const_iter < max_egm_const_iter; EGM_const_iter++){
 
-						double labor_eq_adj  = -gamma*pow(cToday, -gamma - 1.0)*pow(wToday*zToday, 2.0) - psi*pow(nToday, psi-1.0);
+						double labor_eq_adj  = -gamma*std::pow(cToday, -gamma - 1.0)*std::pow(wToday*zToday, 2.0) - psi*std::pow(nToday, psi-1.0);
 
 						nToday        = nToday - labor_eq_diff/labor_eq_adj;
 
 						cToday        = aToday + zToday*wToday*nToday - tauToday*tau_bar[i_z] + dToday - bl/RToday;
 
-						labor_eq_diff = pow(cToday, -gamma)*wToday*zToday - pow(nToday, psi);
+						labor_eq_diff = std::pow(cToday, -gamma)*wToday*zToday - std::pow(nToday, psi);
 
 						double EGM_const_err = fabs(labor_eq_diff);
 
