@@ -99,7 +99,7 @@ List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector gri
 		// Evaluate the new policy functions at the exogenous gridpoints (or the original gridpoints).
 		for(int i_z = 0; i_z < n_z; i_z++){
 			double		zToday      = grid_z[i_z];
-			NumericVector	cond_prob_z = prob_z(i_z, _); // i_z行をベクトルとして取り出す
+//			NumericVector	cond_prob_z = prob_z(i_z, _); // i_z行をベクトルとして取り出す
 
 			for(int i_a = 0; i_a < n_a; i_a++){
 
