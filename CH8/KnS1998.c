@@ -274,8 +274,8 @@ SEXP	Cmarkov(SEXP tran, SEXP ng, SEXP ns)
 SEXP	law_of_motion_sim(SEXP policy, SEXP env)
 {
 	SEXP	k_path, u_path, z_path, dim, lst, lstnames;
-	double	*cap0, *cap1, savings0, savings1, wght, rndw, count, sum, pr_next;
-	int	*emp0, *emp1, i, j, index, it, numi, nums, kloc, glen, *np, *nez, *nzz, e, ne;
+	double	*cap0, *cap1, savings0, savings1, wght, *rndws, rndw, sum, pr_next;
+	int	*emp0, *emp1, i, j, index, it, numi, nums, kloc, glen, *np, *nez, *nzz, e, ne, count;
 #if IsSplineInterpolation==1
 	CubicSpline	**cs;
 #endif
@@ -349,6 +349,8 @@ SEXP	law_of_motion_sim(SEXP policy, SEXP env)
 		cs[i] = NULL;
 #endif
 
+	rndws = Calloc(numi, double);
+
 	for(it=0; it<nums-1; it++){
 
 		cap1 = Calloc(numi, double);
@@ -364,23 +366,31 @@ SEXP	law_of_motion_sim(SEXP policy, SEXP env)
 		else if(wght < 0.0)
 			wght = 0.0;
 
-		for(i=0, count=0, sum=0; i<numi; i++){
+		/* なぜかOpenMPで並列化するループに入れると調子が悪い乱数生成 */
+		GetRNGstate();
+		for(i=0;i<numi;i++)
+			rndws[i] = runif(0, 1);
+		PutRNGstate();
 
-			GetRNGstate();
-			rndw = runif(0, 1);
-			PutRNGstate();
+		count=0; sum=0;
+
+		#pragma omp parallel for private(rndw, index, savings0, savings1, pr_next, e) reduction(+:sum) reduction(+:count)
+		for(i=0; i<numi; i++){
+
+			rndw = rndws[i];
 
 			if(1 <= emp0[i]){
 
 				index = pidx(emp0[i], kloc, INTEGER(z_path)[it]);
 
 #if IsSplineInterpolation==1
-				if(NULL == cs[index])
+				if(NULL == cs[index]){
 					cs[index] = CubicSplineSetup(
 						REAL(grid),
 						&REAL(policy)[np[0] * index],
 						np[0],
 						BoundaryConditionNatural, 0, BoundaryConditionNatural, 0);
+				}
 
 				CubicSplineInterpolation(cs[index], &cap0[i], &savings0, 1);
 #else
@@ -390,12 +400,13 @@ SEXP	law_of_motion_sim(SEXP policy, SEXP env)
 				index = pidx(emp0[i], kloc + 1, INTEGER(z_path)[it]);
 
 #if IsSplineInterpolation==1
-				if(NULL == cs[index])
+				if(NULL == cs[index]){
 					cs[index] = CubicSplineSetup(
 						REAL(grid),
 						&REAL(policy)[np[0] * index],
 						np[0],
 						BoundaryConditionNatural, 0, BoundaryConditionNatural, 0);
+				}
 
 				CubicSplineInterpolation(cs[index], &cap0[i], &savings1, 1);
 
@@ -425,7 +436,7 @@ SEXP	law_of_motion_sim(SEXP policy, SEXP env)
 			sum += cap1[i];
 		}
 
-		REAL(u_path)[it + 1] = count/numi;
+		REAL(u_path)[it + 1] = (double)count/numi;
 		REAL(k_path)[it + 1] = sum/numi;
 
 		Free(cap0);
@@ -433,6 +444,8 @@ SEXP	law_of_motion_sim(SEXP policy, SEXP env)
 		Free(emp0);
 		emp0 = emp1;
 	}
+
+	Free(rndws);
 
 	Free(cap0);
 	Free(emp0);

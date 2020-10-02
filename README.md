@@ -55,7 +55,7 @@ Krusell and Smith (1998)モデルは、部分的にCを使ったコードのみ�
 
 	R CMD SHLIB KnS1998.c cubic_spline.c linear_interpolation.c which.c
 
-としてください。
+としてください。なお、LinuxやMacOS Xでは`$HOME/.R/Makevars`に、MS-Windowsでは`%HOME%/.R/Makevars.win`と言うテキストファイルの中の`CFLAGS`の行に`-fopenmp`オプションを追加すると、コンパイル時にOpenMPが有効になって、高速に実行が可能になります。
 
 なお、プロットは計算結果を保存したファイルを用いるので、先に計算しないとエラーとなります。
 
