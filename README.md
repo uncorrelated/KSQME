@@ -59,7 +59,7 @@ Krusell and Smith (1998)モデルは、部分的にCを使ったコードのみ�
 
 なお、プロットは計算結果を保存したファイルを用いるので、先に計算しないとエラーとなります。
 
-HANKモデル（McKay, Nakamura and Steinsson (2016)）は、部分的に[Rcpp](http://www.rcpp.org/)/[Eigen](http://eigen.tuxfamily.org)/[Spectra](https://spectralib.org/)を使ったパッケージを用いたコードのみとなります。EigenとSpectraのテンプレートライブラリをインストールした後、`/CH8/MNS2016/src/Makevars`のPKG_CXXFLAGS行の-Iをインストール先に書き換えたあと、CH8ディレクトリで、
+HANKモデル（McKay, Nakamura and Steinsson (2016)）は、部分的に[Rcpp](http://www.rcpp.org/)/[Eigen](http://eigen.tuxfamily.org)/[Spectra](https://spectralib.org/)を使ったパッケージを用いたコードのみとなります。EigenとSpectraのテンプレートライブラリをインストールし、`/CH8/MNS2016/src/Makevars`の`PKG_CXXFLAGS`の行に`-ISpectraインストール先`を追加した後、CH8ディレクトリで、
 
 	R CMD INSTALL MNS2016
 
