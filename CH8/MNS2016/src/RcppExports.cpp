@@ -29,8 +29,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // HH_opt_EGM
-List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c_init, NumericMatrix pf_n_init, NumericMatrix pf_sav_init);
-RcppExport SEXP _MNS2016_HH_opt_EGM(SEXP betaSEXP, SEXP paramSEXP, SEXP grid_aSEXP, SEXP grid_zSEXP, SEXP prob_zSEXP, SEXP wTodaySEXP, SEXP RTodaySEXP, SEXP tauTodaySEXP, SEXP dTodaySEXP, SEXP pf_c_initSEXP, SEXP pf_n_initSEXP, SEXP pf_sav_initSEXP) {
+List HH_opt_EGM(double beta, List param, NumericVector grid_a, NumericVector grid_z, NumericMatrix prob_z, double wToday, double RToday, double tauToday, double dToday, NumericMatrix pf_c, NumericMatrix pf_n, NumericMatrix pf_sav);
+RcppExport SEXP _MNS2016_HH_opt_EGM(SEXP betaSEXP, SEXP paramSEXP, SEXP grid_aSEXP, SEXP grid_zSEXP, SEXP prob_zSEXP, SEXP wTodaySEXP, SEXP RTodaySEXP, SEXP tauTodaySEXP, SEXP dTodaySEXP, SEXP pf_cSEXP, SEXP pf_nSEXP, SEXP pf_savSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -43,10 +43,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type RToday(RTodaySEXP);
     Rcpp::traits::input_parameter< double >::type tauToday(tauTodaySEXP);
     Rcpp::traits::input_parameter< double >::type dToday(dTodaySEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type pf_c_init(pf_c_initSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type pf_n_init(pf_n_initSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type pf_sav_init(pf_sav_initSEXP);
-    rcpp_result_gen = Rcpp::wrap(HH_opt_EGM(beta, param, grid_a, grid_z, prob_z, wToday, RToday, tauToday, dToday, pf_c_init, pf_n_init, pf_sav_init));
+    Rcpp::traits::input_parameter< NumericMatrix >::type pf_c(pf_cSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type pf_n(pf_nSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type pf_sav(pf_savSEXP);
+    rcpp_result_gen = Rcpp::wrap(HH_opt_EGM(beta, param, grid_a, grid_z, prob_z, wToday, RToday, tauToday, dToday, pf_c, pf_n, pf_sav));
     return rcpp_result_gen;
 END_RCPP
 }

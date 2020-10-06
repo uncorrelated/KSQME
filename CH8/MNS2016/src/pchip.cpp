@@ -1,15 +1,20 @@
 #include <Rcpp.h>
+#include <vector>
 using namespace Rcpp;
 
 double pchipend(double h1, double h2, double del1, double del2);
+double	pchip(const double *knot_x, const double *knot_y, const int kn, const double x);
 
 /* Piecwise Cubic Hermitean Interpolation Polynomials: Matlab Compatible one */
 
 #define DEBUG 0
 
 double	pchip(NumericVector knot_x, NumericVector knot_y, double x) {
+	return pchip((as< std::vector<double> >(knot_x)).data(), (as< std::vector<double> >(knot_y)).data(), knot_x.length(), x);
+}
+
+double	pchip(const double *knot_x, const double *knot_y, const int kn, const double x) {
 	int	i, j, l, r, m, mp1;
-	int	kn = knot_x.length();
 	double	s;
 	double	h[3], delta[3], a, b, d[3];
 	int	t;

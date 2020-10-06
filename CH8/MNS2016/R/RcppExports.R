@@ -5,8 +5,8 @@ HH_dist <- function(beta, param, grid_a, grid_a_NS, grid_z, prob_z, wToday, RTod
     .Call(`_MNS2016_HH_dist`, beta, param, grid_a, grid_a_NS, grid_z, prob_z, wToday, RToday, tauToday, dToday, pf_c, pf_n, pf_sav)
 }
 
-HH_opt_EGM <- function(beta, param, grid_a, grid_z, prob_z, wToday, RToday, tauToday, dToday, pf_c_init, pf_n_init, pf_sav_init) {
-    .Call(`_MNS2016_HH_opt_EGM`, beta, param, grid_a, grid_z, prob_z, wToday, RToday, tauToday, dToday, pf_c_init, pf_n_init, pf_sav_init)
+HH_opt_EGM <- function(beta, param, grid_a, grid_z, prob_z, wToday, RToday, tauToday, dToday, pf_c, pf_n, pf_sav) {
+    .Call(`_MNS2016_HH_opt_EGM`, beta, param, grid_a, grid_z, prob_z, wToday, RToday, tauToday, dToday, pf_c, pf_n, pf_sav)
 }
 
 pchip <- function(knot_x, knot_y, x) {
