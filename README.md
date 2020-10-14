@@ -1,17 +1,17 @@
 [経済セミナー連載の「定量的マクロ経済学と数値計算」のサポート・リポジトリー](https://github.com/keizai-seminar-quant-macro)にR用のコードが部分的にしか用意されていなかったので、ちょっと書いてみたものです。
 
-実行方法は`git clone`などをしてファイルを展開した後に、Rに読み込ませるだけです。例えば、第3節の離散化による2期間モデルの解法は、[two-period discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20discretized%20method.R)を以下のように読み込ませて計算します。
+実行方法は`git clone`などをしてファイルを展開した後に、Rに読み込ませるだけです。例えば、第3節の離散化による2期間モデルの解法は、[two-period model discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20model%20discretized%20method.R)を以下のように読み込ませて計算します。
 
-	source("two-period discretized method.R")
+	source("two-period model discretized method.R")
 
-`getwd()`で確認できるワーキングディレクトリに[two-period discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20discretized%20method.R)が無いと呼び出せないので注意してください。また、他のファイルやパッケージに依存しているファイルもあります。ファイルはすべて展開し、ソースコード中のコメントやエラーメッセージに応じてパッケージをインストールしてください。
+`getwd()`で確認できるワーキングディレクトリに[two-period model discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20model%20discretized%20method.R)が無いと呼び出せないので注意してください。また、他のファイルやパッケージに依存しているファイルもあります。ファイルはすべて展開し、ソースコード中のコメントやエラーメッセージに応じてパッケージをインストールしてください。
 
 
 #### 第2回 2期間モデルと数値計算の概観
-- [CH2/two-period discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20discretized%20method.R) 第3節 離散化による2期間モデルの解法
-- [CH2/two-period continuous method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20continuous%20method.R) 第4節 操作変数を連続変数にする: 最適化
-- [CH2/two-period root-finding method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20root-finding%20method.R) 第5節1 非線形方程式のゼロ点を探す
-- [CH2/two-period projection method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20projection%20method.R) 第5節2 射影法
+- [CH2/two-period model discretized method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20model%20discretized%20method.R) 第3節 離散化による2期間モデルの解法
+- [CH2/two-period model continuous method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20model%20continuous%20method.R) 第4節 操作変数を連続変数にする: 最適化
+- [CH2/two-period model root-finding method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20model%20root-finding%20method.R) 第5節1 非線形方程式のゼロ点を探す
+- [CH2/two-period model projection method.R](https://github.com/uncorrelated/KSQME/blob/master/CH2/two-period%20model%20projection%20method.R) 第5節2 射影法
 
 #### 第3回 動的計画法
 - [CH3/Robinson Cruesoe Model.R](https://github.com/uncorrelated/KSQME/blob/master/CH3/Robinson%20Cruesoe%20Model.R) 第2節 ロビンソン・クルーソーとベルマン方程式
